@@ -1,0 +1,86 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>login alert</title>
+    <style>
+        .container {
+           width: 100%;
+           max-width: 600px;
+           margin: 0 auto;
+           background-color: #ffffff;
+           border: 1px solid #dddddd;
+           border-radius: 5px;
+           text-align: center;
+        }
+
+        .header {
+          text-align: center;
+          padding: 20px;
+        }
+
+        .content {
+          padding: 20px;
+        }
+
+        .content h4 {
+            font-size: 24px;
+            margin: 0;
+            padding: 0;
+        }
+
+        .content h6 {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .content p {
+            font-size: 18px;
+            font-weight: 500;
+            margin: 0;
+        }
+
+        .verify-button {
+            padding: 0.8rem 2rem; /* Adjusted padding */
+            color: white;
+            background: #fc5d5d;
+            font-size: 1rem;
+            font-weight: 500;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            text-decoration: none; /* Added to remove default link underline */
+            display: inline-block; /* Added to make it inline */
+            margin-bottom: 10px;
+        }
+
+        .verify-button:hover {
+            background: #ff7d7d; /* Change color on hover */
+        }
+
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <img src="https://sahityojogot.com/assets/bg-logo-BWbbv1_f.png" alt="sj logo" style="max-width: 150px;" />
+        <h1>Login Alert</h1>
+        <img src="https://sottosamachar.com/wp-content/uploads/2024/04/logalert.png" alt="login alert">
+    </div>
+    <div class="content">
+      <p>নিম্নে উল্লেখিত ডিভাইসটিতে আপনার একাউন্টটি লগইন হতে দেখা গেছে। লগইন করা ডিভাইসটি আপনার কিনা সেটি নিশ্চিত করুন।</p>
+      <br />
+      <br />
+      <p><b>Device -</b> {{ device_info }}</p>
+      <br />
+      <p><b>Time -</b> {{ current_time }}</p>
+      <br />
+      <p><b>IP Address -</b> {{ ip_add }}</p>
+    </div>
+</div>
+</body>
+</html>
+

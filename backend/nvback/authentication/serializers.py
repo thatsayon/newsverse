@@ -42,3 +42,17 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         validated_data['is_active'] = False
         user = User.objects.create_user(**validated_data)
         return user
+
+class UserLoginSerializer(serializers.Serializer):
+    username = serializers.CharField(required=False)
+    email = serializers.EmailField(required=False)
+    password = serializers.CharField(style={'input_type': 'password'})
+
+    def validate(self, attrs):
+        username = attrs.get('username')
+        email = attrs.get('email')
+
+        if not (username or email):
+            raise serializers.ValidationError("Username or email is required")
+
+        return attrs
