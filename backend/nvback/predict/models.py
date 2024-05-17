@@ -24,6 +24,7 @@ class UserInfo(models.Model):
     country = models.CharField(max_length=120)
 
     fav_topic = models.JSONField()
+    lang = ArrayField(models.CharField(max_length=2), null=True, blank=True)
     
     def save(self, *args, **kwargs):
         if isinstance(self.fav_topic, dict):

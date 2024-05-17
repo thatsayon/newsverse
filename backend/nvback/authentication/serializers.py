@@ -17,11 +17,14 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     favourite_topics = serializers.ListField(
         child=serializers.CharField(max_length=60), write_only=True
     )
+    lang = serializers.ListField(
+        child=serializers.CharField(max_length=2), write_only=True
+    )
 
     class Meta:
         model = User
         fields = ('username', 'email', 'password', 'full_name', 'date_of_birth', 'gender',
-                  'address', 'division', 'state', 'city', 'country', 'favourite_topics')
+                  'address', 'division', 'state', 'city', 'country', 'favourite_topics', 'lang')
 
     def validate_password(self, value):
         if len(value) < 8:
@@ -42,6 +45,17 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         validate_password(value)
         return value
 
+    def validate(self, data):
+        division = data.get('division')
+        state = data.get('state')
+
+        if not division and not state:
+            raise serializers.ValidationError("One of 'division' or 'state' must be provided.")
+        if division and state:
+            raise serializers.ValidationError("Only one of 'division' or 'state' can be provided.")
+
+        return data
+    
     def create(self, validated_data):
         favourite_topics = validated_data.pop('favourite_topics', [])
         user_data = {
@@ -66,7 +80,8 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             'state': validated_data.get('state'),
             'city': validated_data['city'],
             'country': validated_data['country'],
-            'fav_topic': fav_topic
+            'fav_topic': fav_topic,
+            'lang': validated_data['lang']
         }
         
         UserInfo.objects.create(**user_info_data)
