@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.models import Token
+from django.contrib.auth.hashers import check_password
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
@@ -143,3 +144,72 @@ class UserLogoutAPIView(APIView):
     def post(self, request):
         request.auth.delete()
         return Response({"message": "Logout successful"}, status=status.HTTP_200_OK)
+    
+class ChangePasswordAPIView(generics.UpdateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = ChangePasswordSerializer
+
+    def update(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = request.user
+        old_password = serializer.validated_data.get('old_password')
+        new_password = serializer.validated_data.get('new_password')
+
+        if check_password(new_password, user.password):
+            return Response({'new_password': ['New password must be different from the old password.']}, status=status.HTTP_400_BAD_REQUEST)
+        if not check_password(old_password, user.password):
+            return Response({'old_password': ['Wrong password.']}, status=status.HTTP_400_BAD_REQUEST)
+
+        user.set_password(new_password)
+        user.save()
+        return Response({'message': 'Password successfully changed'}, status=status.HTTP_200_OK)
+
+class UserEmailUpdateAPIView(generics.UpdateAPIView):
+    serializer_class = EmailUpdateSerializer
+    permission_classes = [IsAuthenticated]
+
+    def update(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            user = request.user
+            new_email = serializer.validated_data.get('new_email')
+
+            user.new_email = new_email
+            user.save()
+
+            # Generate verification link
+            token = default_token_generator.make_token(user)
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            confirm_link = f"http://127.0.0.1:8000/auth/confirm-update-email/{uid}/{token}/"
+
+            # Send verification email
+            email_subject = "Confirm Your Email Address Update"
+            email_body = render_to_string(
+                'confirm_email_update.html', {'confirm_link': confirm_link})
+            email = EmailMultiAlternatives(email_subject, '', to=[new_email])
+            email.attach_alternative(email_body, "text/html")
+            email.send()
+
+            return Response({"detail": "Verification email sent to the new email address."}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+def confirm_email_update(request, uid64, token):
+    try:
+        uid = urlsafe_base64_decode(uid64).decode()
+        user = User.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+
+    if user is not None and default_token_generator.check_token(user, token):
+        new_email = user.new_email
+        if new_email:
+            user.email = new_email
+            user.new_email = ''
+            user.save()
+            return redirect('https://sahityojogot.com/')
+        else:
+            return Response({"error": "No new email address found."}, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        return Response({"error": "Invalid activation link."}, status=status.HTTP_400_BAD_REQUEST)
+
