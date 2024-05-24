@@ -10,6 +10,9 @@ const config: Config = {
     extend: {
       colors: {
         'nav-dark': '#222222',
+        'main-one': '#d7f64e',
+        'main-two': '#4c4fc8',
+        'main-one-deep': "#BDD945",
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",

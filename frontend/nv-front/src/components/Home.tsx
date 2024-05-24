@@ -1,15 +1,18 @@
 "use client";
-import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import WelcomeHome from "./modules/home/Welcome";
+import Post from "./modules/post/PostHome";
 
 const Home: React.FC = () => {
   const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [posts, setPosts] = useState<any[] | null>([]);
   const router = useRouter();
 
   useEffect(() => {
     const checkAuthorization = async () => {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
 
       if (!token) {
         setIsAuthorized(false);
@@ -18,27 +21,26 @@ const Home: React.FC = () => {
       }
 
       try {
-        const response = await fetch('http://127.0.0.1:8000/predict/posts/', {
-          method: 'GET',
+        const response = await fetch("http://127.0.0.1:8000/predict/posts/", {
+          method: "GET",
           headers: {
-            'Authorization': `Token ${token}`
-          }
+            Authorization: `Token ${token}`,
+          },
         });
-        const data = await response.json()
-        console.log(data)
+        const data = await response.json();
+        setPosts(data);
         if (response.ok) {
           setIsAuthorized(true);
         } else if (response.status === 401) {
-          localStorage.removeItem('token');
-          router.push('/login');
+          localStorage.removeItem("token");
+          router.push("/login");
         } else {
           setIsAuthorized(false);
         }
       } catch (error) {
-        console.error('An error occurred:', error);
+        console.error("An error occurred:", error);
         setIsAuthorized(false);
       }
-
       setIsLoading(false);
     };
 
@@ -48,16 +50,7 @@ const Home: React.FC = () => {
   if (isLoading) {
     return <div>Loading...</div>;
   }
-
-  return (
-    <div>
-      {isAuthorized === true ? (
-        <AuthorizedComponent />
-      ) : (
-        <WelcomeComponent />
-      )}
-    </div>
-  );
+  return <div>{isAuthorized === true ? <Post posts={posts} /> : <WelcomeHome />}</div>;
 };
 
 const AuthorizedComponent: React.FC = () => {

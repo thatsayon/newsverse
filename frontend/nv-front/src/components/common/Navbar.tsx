@@ -26,7 +26,7 @@ export default function NavBar() {
   }, []);
   return (
     <>
-      <nav className="flex justify-between py-3 rounded-b bg-nav-dark">
+      <nav className="flex justify-between py-3 rounded-b bg-main-two">
         <div>
           <Image src={NewsVerse} alt="news verse" width={200} height={200} className="ml-3"/>
         </div>
@@ -38,7 +38,7 @@ export default function NavBar() {
                   <Link
                     href={link.path}
                     className={
-                      isActive(link.path) ? "text-red-700" : "text-white"
+                      isActive(link.path) ? "text-main-one" : "text-white"
                     }
                   >
                     {link.name}
@@ -53,7 +53,7 @@ export default function NavBar() {
             <>
               <Link
                 href="/"
-                className="text-white bg-slate-800 px-4 py-1 rounded mx-2 text-xl"
+                className="text-main-two font-bold bg-main-one px-4 py-1 rounded mx-2 text-xl"
               >
                 Logout
               </Link>
@@ -62,7 +62,7 @@ export default function NavBar() {
             <>
               <Link
                 href="/login"
-                className="text-white bg-slate-800 px-4 py-1 rounded mx-2 text-xl"
+                className="text-main-two font-bold bg-main-one px-4 py-1 rounded mx-2 text-xl"
               >
                 Login
               </Link>
