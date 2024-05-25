@@ -75,7 +75,7 @@ class PredictedPost(APIView, PageNumberPagination):
 
             if posts.exists():
                 result = self.paginate_queryset(posts, request, view=self)
-                serializer = PostSerializer(result, many=True)
+                serializer = PostSerializer(result, many=True, context={'request': request})
                 response = self.get_paginated_response(serializer.data)
                 response.status_code = status.HTTP_200_OK
                 return response

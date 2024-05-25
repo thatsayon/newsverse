@@ -18,17 +18,17 @@ class Post(models.Model):
     title = models.CharField(_("Title"), max_length=120)
     content = models.TextField(_("Content"))
     thumbnail = models.ImageField(_("Thumbnail"), upload_to="img/thumbnail", null=True, blank=True)
-    slug = models.SlugField(unique=True, blank=True)
+    slug = models.SlugField(unique=True, blank=True, max_length=255)
     created_at = models.DateTimeField(_("Created At"), auto_now_add=True)
     topics = ArrayField(models.CharField(max_length=60))
     lang = models.CharField(_("Language"), max_length=2, choices=LANGUAGE_CHOICES, blank=True, null=True)
 
-    upvote_count = models.PositiveBigIntegerField(default=0)
-    downvote_count= models.PositiveBigIntegerField(default=0)
+    upvote_count = models.PositiveIntegerField(default=0)
+    downvote_count= models.PositiveIntegerField(default=0)
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.title)
+            self.slug = slugify(self.title)[:240]
         
         while Post.objects.filter(slug=self.slug).exists():
             self.slug = self.create_slug(self.slug)
@@ -36,7 +36,7 @@ class Post(models.Model):
     
     def create_slug(self, slug):
         random_text = ''.join(random.choices(string.ascii_letters + string.digits, k=6))
-        return f"{slug}-{random_text}"
+        return f"{slug[:240]}-{random_text}" 
 
     def update_vote_counts(self):
         self.upvote_count = self.vote_set.filter(vote_type=Vote.UPVOTE).count()

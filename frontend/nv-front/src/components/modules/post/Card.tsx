@@ -8,20 +8,110 @@ import { CiRead, CiUnread } from "react-icons/ci";
 import { useState, useRef, useEffect } from "react";
 
 export default function Card(post_data: any) {
+  // console.log(post_data.post_data)
   const [isFlipped, setIsFlipped] = useState<boolean>(false);
   const cardRef = useRef<HTMLDivElement>(null);
   const [cardHeight, setCardHeight] = useState(0);
+
+  const [upVoteVal, setupVoteVal] = useState<string>("");
+  const [userUpvoted, setuserUpvoted] = useState<boolean>(false);
+
+  const [downVoteVal, setdownVoteVal] = useState<string>("");
+  const [userDownvoted, setuserDownvoted] = useState<boolean>(false);
 
   useEffect(() => {
     if (cardRef.current) {
       setCardHeight(cardRef.current.offsetHeight);
     }
+
+    setupVoteVal(post_data.post_data.upvote_count);
+    setuserUpvoted(post_data.post_data.user_upvoted);
+
+    setdownVoteVal(post_data.post_data.downvote_count);
+    setuserDownvoted(post_data.post_data.user_downvoted);
   }, []);
 
   const flipCard = () => setIsFlipped(!isFlipped);
 
+  const handleUpvote = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.error("User is not authenticated");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `http://127.0.0.1:8000/post/upvote/${post_data.post_data.id}/`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Token ${token}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Request failed with status ${response.status}`);
+      }
+
+      const data = await response.json();
+      setupVoteVal(data.upvote_count);
+      setuserUpvoted(data.user_upvoted);
+
+      if(data.remove_downvote){
+        setuserDownvoted(false);
+        setdownVoteVal(Number(downVoteVal)>0?String(Number(downVoteVal)-1):downVoteVal)
+      }
+    } catch (error) {
+      console.error("Error upvoting the post:", error);
+    }
+  };
+
+  const handleDownvote = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.error("User is not authenticated");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `http://127.0.0.1:8000/post/downvote/${post_data.post_data.id}/`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Token ${token}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Request failed with status ${response.status}`);
+      }
+
+      const data = await response.json();
+      setdownVoteVal(data.downvote_count);
+      setuserDownvoted(data.user_downvoted);
+
+      if(data.remove_upvote){
+        setuserUpvoted(false);
+        setupVoteVal(Number(upVoteVal)>0?String(Number(upVoteVal)-1):upVoteVal);
+      }
+    } catch (error) {
+      console.error("Error upvoting the post:", error);
+    }
+  };
+
+  const handleUpvoteforFlipcard = () => {
+    handleUpvote();
+    setIsFlipped(true);
+  }
   return (
     <>
+    {console.log(isFlipped)}
       {isFlipped ? (
         <div
           style={{ height: `${cardHeight}px` }}
@@ -47,13 +137,13 @@ export default function Card(post_data: any) {
           </p>
 
           <div className="flex mt-2">
-            <div className="flex mr-2 cursor-pointer px-2 py-1 bg-nav-dark rounded-lg justify-center items-center hover:text-green-400">
+            <div className={`flex mr-2 cursor-pointer px-2 py-1 bg-nav-dark rounded-lg justify-center items-center ${userUpvoted?"text-green-400":""} hover:text-green-400`} onClick={handleUpvoteforFlipcard}>
               <LuArrowBigUp className="mr-1 text-2xl" />
-              <p className="font-bold">6</p>
+              <p className="font-bold">{upVoteVal}</p>
             </div>
-            <div className="flex mr-2 cursor-pointer px-2 py-1 bg-nav-dark rounded-lg justify-center items-center hover:text-red-400">
+            <div className={`flex mr-2 cursor-pointer px-2 py-1 bg-nav-dark rounded-lg justify-center items-center ${userDownvoted?"text-red-400":""} hover:text-red-400`} onClick={handleDownvote}>
               <LuArrowBigDown className="mr-1 text-2xl" />
-              <p className="font-bold">2</p>
+              <p className="font-bold">{downVoteVal}</p>
             </div>
             <div
               className="flex mr-2 cursor-pointer px-2 py-1 bg-nav-dark items-center justify-center rounded-lg hover:text-main-one"
@@ -111,13 +201,21 @@ export default function Card(post_data: any) {
           </div>
 
           <div className="flex mt-2">
-            <div className="flex mr-2 cursor-pointer px-2 py-1 bg-nav-dark rounded-lg justify-center items-center hover:text-green-400">
+            <div
+              className={`flex mr-2 cursor-pointer px-2 py-1 bg-nav-dark rounded-lg justify-center items-center ${
+                userUpvoted ? "text-green-400" : ""
+              } hover:text-green-400`}
+              onClick={handleUpvote}
+            >
               <LuArrowBigUp className="mr-1 text-2xl" />
-              <p className="font-bold">6</p>
+              <p className="font-bold">{upVoteVal}</p>
             </div>
-            <div className="flex mr-2 cursor-pointer px-2 py-1 bg-nav-dark rounded-lg justify-center items-center hover:text-red-400">
+            <div
+              className={`flex mr-2 cursor-pointer px-2 py-1 bg-nav-dark rounded-lg justify-center items-center ${userDownvoted ? "text-red-400" : ""} hover:text-red-400`}
+              onClick={handleDownvote}
+            >
               <LuArrowBigDown className="mr-1 text-2xl" />
-              <p className="font-bold">2</p>
+              <p className="font-bold">{downVoteVal}</p>
             </div>
             <div
               className="flex mr-2 cursor-pointer px-2 py-1 bg-nav-dark items-center justify-center rounded-lg hover:text-main-one"
