@@ -14,7 +14,6 @@ LANGUAGE_CHOICES = (
 )
 
 class Post(models.Model):
-
     title = models.CharField(_("Title"), max_length=120)
     content = models.TextField(_("Content"))
     thumbnail = models.ImageField(_("Thumbnail"), upload_to="img/thumbnail", null=True, blank=True)

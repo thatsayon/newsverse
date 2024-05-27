@@ -3,6 +3,7 @@ import NV from "@/app/favicon.ico";
 import { FaShareSquare } from "react-icons/fa";
 import { LuArrowBigUp, LuArrowBigDown } from "react-icons/lu";
 import { FaRegBookmark } from "react-icons/fa6";
+import { FaBookmark } from "react-icons/fa";
 import { IoIosLink } from "react-icons/io";
 import { CiRead, CiUnread } from "react-icons/ci";
 import { useState, useRef, useEffect } from "react";
@@ -18,6 +19,7 @@ export default function Card(post_data: any) {
 
   const [downVoteVal, setdownVoteVal] = useState<string>("");
   const [userDownvoted, setuserDownvoted] = useState<boolean>(false);
+  const [bookmarked, setBookmarked] = useState<boolean>(false);
 
   useEffect(() => {
     if (cardRef.current) {
@@ -29,6 +31,8 @@ export default function Card(post_data: any) {
 
     setdownVoteVal(post_data.post_data.downvote_count);
     setuserDownvoted(post_data.post_data.user_downvoted);
+
+    setBookmarked(post_data.post_data.user_bookmarked);
   }, []);
 
   const flipCard = () => setIsFlipped(!isFlipped);
@@ -105,13 +109,44 @@ export default function Card(post_data: any) {
     }
   };
 
-  const handleUpvoteforFlipcard = () => {
-    handleUpvote();
-    setIsFlipped(true);
-  }
+  const handleBookmark = async () => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      console.error("User is not authenticated");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `http://127.0.0.1:8000/profile/bookmark/${post_data.post_data.id}/`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Token ${token}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Request failed with status ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      if(data.bookmarked){
+        setBookmarked(true);
+      } else {
+        setBookmarked(false);
+      }
+    } catch (error) {
+      console.error("Error bookmark the post: ", error);
+    }
+  };
+
   return (
     <>
-    {console.log(isFlipped)}
       {isFlipped ? (
         <div
           style={{ height: `${cardHeight}px` }}
@@ -137,7 +172,7 @@ export default function Card(post_data: any) {
           </p>
 
           <div className="flex mt-2">
-            <div className={`flex mr-2 cursor-pointer px-2 py-1 bg-nav-dark rounded-lg justify-center items-center ${userUpvoted?"text-green-400":""} hover:text-green-400`} onClick={handleUpvoteforFlipcard}>
+            <div className={`flex mr-2 cursor-pointer px-2 py-1 bg-nav-dark rounded-lg justify-center items-center ${userUpvoted?"text-green-400":""} hover:text-green-400`} onClick={handleUpvote}>
               <LuArrowBigUp className="mr-1 text-2xl" />
               <p className="font-bold">{upVoteVal}</p>
             </div>
@@ -223,8 +258,8 @@ export default function Card(post_data: any) {
             >
               <CiRead className="text-xl" />
             </div>
-            <div className="flex mr-2 cursor-pointer px-2 py-1 bg-nav-dark items-center justify-center rounded-lg hover:text-main-one">
-              <FaRegBookmark />
+            <div className="flex mr-2 cursor-pointer px-2 py-1 bg-nav-dark items-center justify-center rounded-lg hover:text-main-one" onClick={handleBookmark}>
+              {bookmarked ? <FaBookmark /> : <FaRegBookmark />}
             </div>
             <div className="flex cursor-pointer px-2 py-1 bg-nav-dark items-center justify-center rounded-lg hover:text-main-one">
               <IoIosLink className="text-xl" />
