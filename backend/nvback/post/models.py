@@ -17,6 +17,7 @@ class Post(models.Model):
     title = models.CharField(_("Title"), max_length=120)
     content = models.TextField(_("Content"))
     thumbnail = models.ImageField(_("Thumbnail"), upload_to="img/thumbnail", null=True, blank=True)
+    thumbnail_url = models.URLField(_("Thumbnail URL"), max_length=200, null=True, blank=True)
     slug = models.SlugField(unique=True, blank=True, max_length=255)
     created_at = models.DateTimeField(_("Created At"), auto_now_add=True)
     topics = ArrayField(models.CharField(max_length=60))

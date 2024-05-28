@@ -9,6 +9,7 @@ urlpatterns = [
     path('post/', include('post.urls')),
     path('predict/', include('predict.urls')),
     path('profile/', include('uprofile.urls')),
+    path('crawl/', include('crawl.urls')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
