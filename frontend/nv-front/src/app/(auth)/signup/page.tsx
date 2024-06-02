@@ -1,9 +1,9 @@
-import LoginForm from '@/components/modules/auth/LoginForm'
+import SignUp from '@/components/modules/auth/SignupForm'
 
 export default function singup () {
     return (
         <section>
-            <LoginForm />
+            <SignUp />
         </section>
     )
 }

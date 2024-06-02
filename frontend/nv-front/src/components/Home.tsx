@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import WelcomeHome from "./modules/home/Welcome";
 import Post from "./modules/post/PostHome";
+import Cookies from "js-cookie";
 
 const Home: React.FC = () => {
   const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null);
@@ -13,8 +14,9 @@ const Home: React.FC = () => {
   useEffect(() => {
     const checkAuthorization = async () => {
       const token = localStorage.getItem("token");
+      const userToken = Cookies.get('token');
 
-      if (!token) {
+      if (!userToken) {
         setIsAuthorized(false);
         setIsLoading(false);
         return;
@@ -24,7 +26,7 @@ const Home: React.FC = () => {
         const response = await fetch("http://127.0.0.1:8000/predict/posts/", {
           method: "GET",
           headers: {
-            Authorization: `Token ${token}`,
+            Authorization: `Token ${userToken}`,
           },
         });
         const data = await response.json();
