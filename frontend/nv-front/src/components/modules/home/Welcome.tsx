@@ -22,7 +22,7 @@ export default function WelcomeHome() {
           </span>
           .
         </h1>
-        <h2 className="absolute top-12 right-12 text-2xl text-center border-2 p-4 rounded-full">
+        <h2 className="absolute top-16 right-12 text-2xl text-center border-2 p-4 rounded-full">
           All your news <br />
           in one place
         </h2>
