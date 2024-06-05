@@ -1,34 +1,20 @@
 "use client";
 import Link from "next/link";
-import { permanentRedirect, redirect, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import NewsVerse from "@/../public/news verse.png";
 import Cookies from "js-cookie";
-import { useRouter } from "next/router";
 import { FaSearch } from "react-icons/fa";
 
-export default function NavBar() {
+export default function NavBar(token: any) {
   const pathname = usePathname();
   const hideNavBarOnPages = ["/login", "/signup"];
-  if (hideNavBarOnPages.includes(pathname)) {
-    return null; // Don't render the navbar on specified pages
-  }
-  const isActive = (path: string) => path == pathname;
-  const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null);
-  const [placeholder, setPlaceholder] = useState<string>("Search");
+
   const [searchtext, setSearchtext] = useState<string>("");
+  const [placeholder, setPlaceholder] = useState<string>("Search");
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    const userToken = Cookies.get("token");
-
-    if (!userToken) {
-      setIsAuthorized(false);
-      return;
-    }
-    setIsAuthorized(true);
-  }, []);
+  
 
   const handleLogout = () => {
     Cookies.remove("token");
@@ -49,15 +35,17 @@ export default function NavBar() {
   }
 
   const handleSearch = () => {
-    // Function to be called when Enter is pressed
     console.log("Search term submitted:", searchtext);
-    // Add your search logic here
   };
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       handleSearch();
     }
   };
+
+  if (hideNavBarOnPages.includes(pathname)) {
+    return null; 
+  }
   return (
     <>
       <nav className="flex justify-between py-2 bg-[#121213] rounded-b border-b-2 border-slate-800 overflow-hidden">
@@ -86,7 +74,7 @@ export default function NavBar() {
           </div>
         </div>
         <div>
-          {isAuthorized ? (
+          {!!token.token ? (
             <>
               <div
                 onClick={handleLogout}

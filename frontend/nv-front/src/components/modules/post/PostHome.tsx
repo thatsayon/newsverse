@@ -7,7 +7,7 @@ export default function Post(posts: any) {
                 posts.posts?.results.map((data: any) => {
                     return(
                         <>
-                        <Card post_data={data} />
+                        <Card key={data.id} post_data={data} />
                         </>
                     )
                 })

@@ -5,7 +5,7 @@ import { useEffect, ComponentType } from 'react';
 import { getToken } from '@/utils/tokenControl';
 
 const withAuth = (WrappedComponent: ComponentType<any>) => {
-  return (props: any) => {
+  const WithAuthComponent = (props: any) => {
     const router = useRouter();
 
     useEffect(() => {
@@ -17,6 +17,10 @@ const withAuth = (WrappedComponent: ComponentType<any>) => {
 
     return <WrappedComponent {...props} />;
   };
+
+  WithAuthComponent.displayName = `WithAuth(${WrappedComponent.displayName || WrappedComponent.name || 'Component'})`;
+
+  return WithAuthComponent;
 };
 
 export default withAuth;
