@@ -22,7 +22,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
 
-            <div className="fixed top-0 left-0 w-full z-20">
+            <div className="sticky top-0 left-0 w-full z-20">
               <NavBar token={userToken?.value}/>
             </div>
 

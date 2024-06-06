@@ -41,8 +41,9 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="flex pt-16">
+    <div className="flex">
       <div className="fixed h-screen">
+
         {expanded ? (
           <div className="pt-4 h-screen flex flex-col w-16 items-center border-r-2 border-slate-800">
             <div className="text-2xl">
@@ -128,7 +129,7 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
           </div>
         )}
       </div>
-      <div className={`${expanded ? "ml-16" : "ml-56"} mt-6`}>{children}</div>
+      <div className={`${expanded ? "ml-16" : "ml-56"} mt-4`}>{children}</div>
     </div>
   );
 }

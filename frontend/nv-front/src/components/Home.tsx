@@ -13,7 +13,6 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     const checkAuthorization = async () => {
-      const token = localStorage.getItem("token");
       const userToken = Cookies.get('token');
 
       if (!userToken) {

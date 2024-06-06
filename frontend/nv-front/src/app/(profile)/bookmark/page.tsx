@@ -68,31 +68,31 @@ const Bookmark: React.FC = () => {
   return (
     <>
       {!!post?.results[0] == false ? (
-        <div className="flex items-center justify-center flex-col">
-          <FaRegBookmark className="text-6xl opacity-80 mb-3 mt-11" />
-          <h1 className="text-3xl mb-3">Your bookmark list is empty.</h1>
-          <p className="text-lg w-4/12 text-center mb-3">
-            Go back to your feed and bookmark posts you’d like to keep or read
-            later. Each post you bookmark will be stored here.
-          </p>
-          <Link
-            href="/"
-            className="font-bold text-black bg-white px-5 py-3 rounded-lg"
-          >
-            Back to feed
-          </Link>
+        <div className="fixed w-screen overflow-hidden">
+          <div className="flex flex-col items-center">
+            <FaRegBookmark className="text-6xl opacity-80 mb-3 mt-11" />
+            <h1 className="text-3xl mb-3">Your bookmark list is empty.</h1>
+            <p className="text-lg w-4/12 text-center mb-3">
+              Go back to your feed and bookmark posts you’d like to keep or read
+              later. Each post you bookmark will be stored here.
+            </p>
+            <Link
+              href="/"
+              className="font-bold text-black bg-white px-5 py-3 rounded-lg"
+            >
+              Back to feed
+            </Link>
+          </div>
         </div>
       ) : (
         <div className="grid lg:grid-cols-4 md:grid-cols-2 mx-4 gap-4">
-          {
-            post?.results.map((data) => {
-                return (
-                    <>
-                        <Card post_data={data} />
-                    </>
-                )
-            })
-          }
+          {post?.results.map((data) => {
+            return (
+              <>
+                <Card post_data={data} />
+              </>
+            );
+          })}
         </div>
       )}
     </>
