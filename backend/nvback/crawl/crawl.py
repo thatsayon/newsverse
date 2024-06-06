@@ -15,6 +15,7 @@ def crawl_data(url: str):
         news_item['content'] = item.description.text 
         news_item['news_link'] = item.link.text 
         news_item['thumbnail'] = item.find("media:thumbnail").get('url')
+        # news_item['thumbnail'] = item.find("media:content").get('url')
         news_items.append(news_item)
 
     return news_items

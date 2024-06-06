@@ -3,6 +3,8 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.pagination import PageNumberPagination
+from django.utils import timezone
 from .models import *
 from .serializers import *
 
@@ -98,3 +100,21 @@ class DownvotePostAPIView(APIView):
         }
         
         return Response(response_data, status=status.HTTP_200_OK if not user_downvoted else status.HTTP_201_CREATED)
+    
+class MostUpvotedAPIView(APIView, PageNumberPagination):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        seven_days_ago = timezone.now() - timezone.timedelta(days=7)
+        recent_posts = Post.objects.filter(created_at__gte=seven_days_ago)
+
+        posts = recent_posts.order_by('-upvote_count')
+
+        if posts.exists():
+            result = self.paginate_queryset(posts, request, view=self)
+            serializer = PostSerializer(result, many=True, context={'request': request})
+            response = self.get_paginated_response(serializer.data)
+            response.status_code = status.HTTP_200_OK
+            return response
+        else:
+            return Response({"error": "No post found"}, status=status.HTTP_404_NOT_FOUND)

@@ -6,11 +6,13 @@ from crawl.access import IsSelectedUser
 from .crawl import crawl_data
 from .post import add_post
 
+
 class CrawlWwebsites(APIView):
     permission_classes = [IsAuthenticated, IsSelectedUser]
 
     def post(self, request):
         data = crawl_data("https://feeds.bbci.co.uk/news/world/rss.xml")
+        # data = crawl_data("https://www.jagonews24.com/rss/rss.xml")
         for d in data:
             add_post(d['title'], d['content'], d['thumbnail'])
 
