@@ -1,0 +1,36 @@
+.inputBox {
+  position: relative;
+  width: 100%;
+}
+
+.inputBox input {
+  position: relative;
+  width: 100%;
+  background: #333;
+  border: none;
+  outline: none;
+  padding: 25px 10px 7.5px;
+  border-radius: 4px;
+  color: #fff;
+  font-weight: 500;
+  font-size: 1em;
+}
+
+.inputBox i {
+  position: absolute;
+  left: 10px;                /* Align label with input padding */
+  top: 50%;                  /* Vertically center label */
+  transform: translateY(-50%); /* Adjust for vertical centering */
+  font-style: normal;        /* Normal font style (not italic) */
+  color: #aaa;               /* Grey color for label */
+  transition: 0.5s ease;     /* Smooth transition for all properties */
+  pointer-events: none;      /* Make label non-interactive */
+}
+
+.inputBox input:focus ~ i,
+.inputBox input:not(:placeholder-shown) ~ i {
+  top: 5px;                  /* Move label to the top */
+  transform: translateY(0);  /* Reset the translateY */
+  font-size: 0.75em;         /* Smaller font size for the label */
+  color: #fff;               /* Change label color to white */
+}

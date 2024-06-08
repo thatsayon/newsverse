@@ -5,7 +5,7 @@ import { login } from "@/utils/loginControl"; // Update with the correct path
 import axios from "axios";
 import { FaHome } from "react-icons/fa";
 import { GrHomeRounded } from "react-icons/gr";
-import "./styles.css";
+import "./loginStyle.css";
 
 export default function LoginForm() {
   const [identifier, setIdentifier] = useState<string>("");

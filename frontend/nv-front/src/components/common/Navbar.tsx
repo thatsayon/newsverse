@@ -14,13 +14,10 @@ export default function NavBar(token: any) {
   const [searchtext, setSearchtext] = useState<string>("");
   const [placeholder, setPlaceholder] = useState<string>("Search");
 
-  
-
   const handleLogout = () => {
     Cookies.remove("token");
     window.location.href = "/";
   };
-
 
   const handleFocus = () => {
     setPlaceholder("Search a post");
@@ -32,7 +29,7 @@ export default function NavBar(token: any) {
 
   const handleInputchange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchtext(e.target.value);
-  }
+  };
 
   const handleSearch = () => {
     console.log("Search term submitted:", searchtext);
@@ -44,7 +41,7 @@ export default function NavBar(token: any) {
   };
 
   if (hideNavBarOnPages.includes(pathname)) {
-    return null; 
+    return null;
   }
   return (
     <>
@@ -58,24 +55,28 @@ export default function NavBar(token: any) {
             className="ml-3"
           />
         </div>
-        <div>
-          <div className="flex items-center border-2 px-2 border-slate-800 rounded-lg">
-            <FaSearch className="mr-2 cursor-pointer" onClick={handleSearch}/>
-            <input
-              type="text"
-              value={searchtext}
-              onChange={handleInputchange}
-              placeholder={placeholder}
-              className="focus:outline-none w-80 h-10"
-              onFocus={handleFocus}
-              onBlur={handleBlur}
-              onKeyDown={handleKeyDown}
-            />
-          </div>
-        </div>
+
         <div>
           {!!token.token ? (
             <>
+              <div>
+                <div className="flex items-center border-2 px-2 border-slate-800 rounded-lg">
+                  <FaSearch
+                    className="mr-2 cursor-pointer"
+                    onClick={handleSearch}
+                  />
+                  <input
+                    type="text"
+                    value={searchtext}
+                    onChange={handleInputchange}
+                    placeholder={placeholder}
+                    className="focus:outline-none w-80 h-10"
+                    onFocus={handleFocus}
+                    onBlur={handleBlur}
+                    onKeyDown={handleKeyDown}
+                  />
+                </div>
+              </div>
               <div
                 onClick={handleLogout}
                 className="text-main-two font-bold bg-main-one px-4 py-1 rounded mx-2 text-xl cursor-pointer"
@@ -85,11 +86,10 @@ export default function NavBar(token: any) {
             </>
           ) : (
             <>
-              <Link
-                href="/login"
-                className="text-main-two font-bold bg-main-one px-4 py-1 rounded mx-2 text-xl"
-              >
-                Login
+              <Link href="/login" className="">
+                <div className="text-main-two font-bold bg-main-one px-4 py-1 rounded mx-2 text-xl">
+                  Login
+                </div>
               </Link>
             </>
           )}
