@@ -2,7 +2,6 @@
 import { useState, useEffect, useMemo } from "react";
 import "./signupStyle.css";
 
-
 function Step1({
   username,
   setUsername,
@@ -10,6 +9,8 @@ function Step1({
   setEmail,
   fullName,
   setFullName,
+  password,
+  setPassword,
 }: {
   username: string;
   setUsername: React.Dispatch<React.SetStateAction<string>>;
@@ -17,6 +18,8 @@ function Step1({
   setEmail: React.Dispatch<React.SetStateAction<string>>;
   fullName: string;
   setFullName: React.Dispatch<React.SetStateAction<string>>;
+  password: string;
+  setPassword: React.Dispatch<React.SetStateAction<string>>;
 }) {
   return (
     <div>
@@ -51,6 +54,10 @@ function Step1({
             onChange={(e) => setFullName(e.target.value)}
           />
           <i>Full Name</i>
+        </div>
+        <div className="inputBox">
+          <input type="text" required placeholder=" " value={password} />
+          <i>Password</i>
         </div>
       </div>
     </div>
@@ -99,6 +106,8 @@ export default function SignUp() {
   const [username, setUsername] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [fullName, setFullName] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [isValid, setIsValid] = useState<boolean>(false);
 
   useEffect(() => {
@@ -116,6 +125,8 @@ export default function SignUp() {
         setEmail={setEmail}
         fullName={fullName}
         setFullName={setFullName}
+        password={password}
+        setPassword={setPassword}
       />,
       <Step2 key="step2" />,
       <Step3 key="step3" />,

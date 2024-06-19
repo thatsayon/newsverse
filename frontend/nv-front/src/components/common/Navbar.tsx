@@ -56,27 +56,31 @@ export default function NavBar(token: any) {
           />
         </div>
 
+        {!!token.token ? (
+          <div>
+            <div className="flex items-center border-2 px-2 border-slate-800 rounded-lg">
+              <FaSearch
+                className="mr-2 cursor-pointer"
+                onClick={handleSearch}
+              />
+              <input
+                type="text"
+                value={searchtext}
+                onChange={handleInputchange}
+                placeholder={placeholder}
+                className="focus:outline-none w-80 h-10"
+                onFocus={handleFocus}
+                onBlur={handleBlur}
+                onKeyDown={handleKeyDown}
+              />
+            </div>
+          </div>
+        ) : (
+          <></>
+        )}
         <div>
           {!!token.token ? (
             <>
-              <div>
-                <div className="flex items-center border-2 px-2 border-slate-800 rounded-lg">
-                  <FaSearch
-                    className="mr-2 cursor-pointer"
-                    onClick={handleSearch}
-                  />
-                  <input
-                    type="text"
-                    value={searchtext}
-                    onChange={handleInputchange}
-                    placeholder={placeholder}
-                    className="focus:outline-none w-80 h-10"
-                    onFocus={handleFocus}
-                    onBlur={handleBlur}
-                    onKeyDown={handleKeyDown}
-                  />
-                </div>
-              </div>
               <div
                 onClick={handleLogout}
                 className="text-main-two font-bold bg-main-one px-4 py-1 rounded mx-2 text-xl cursor-pointer"
