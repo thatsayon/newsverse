@@ -9,4 +9,6 @@ urlpatterns = [
     path('update-email/', UserEmailUpdateAPIView.as_view(), name='update-email'),
     path('confirm-update-email/<str:uid64>/<str:token>/', confirm_email_update, name='confirm email update'),
     path('active/<uid64>/<token>/', active, name='activate'),
+    path('check-email/', CheckEmailExistsorNotApiView.as_view(), name='check email'),
+    path('check-username/', CheckUsernameExistsorNotAPIView.as_view(), name='check username'),
 ]

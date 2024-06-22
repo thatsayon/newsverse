@@ -1,5 +1,6 @@
 from pathlib import Path
 import os 
+import dj_database_url
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -35,11 +36,13 @@ INSTALLED_APPS = [
     'crawl',
 ]
 
+
+# need to check on the csrf token before production | *** (must)
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -50,6 +53,11 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000"
 ]
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:3000"
+]
+
 
 CORS_ALLOW_CREDENTIALS = True
 ROOT_URLCONF = 'core.urls'
@@ -94,6 +102,14 @@ DATABASES = {
     }
 }
 
+# DATABASES = {
+#     'default': dj_database_url.config(
+#         # Replace this value with your local database's connection string.
+#         # default='postgresql://postgres:postgres@localhost:5432/mysite',
+#         default='postgres://nv_db_user:w9nXqPD9KYWXkiNb5MsP4K5PfZULAJI8@dpg-cpgov8cf7o1s738iq2gg-a.singapore-postgres.render.com/nv_db', 
+#         conn_max_age=600
+#     )
+# }
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 

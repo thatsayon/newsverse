@@ -213,3 +213,24 @@ def confirm_email_update(request, uid64, token):
     else:
         return Response({"error": "Invalid activation link."}, status=status.HTTP_400_BAD_REQUEST)
 
+
+class CheckEmailExistsorNotApiView(APIView):
+    def post(self, request, *args, **kwargs):
+        serializer = EmailUpdateSerializer(data=request.data)
+        if serializer.is_valid():
+            given_email = serializer.validated_data.get('new_email')
+            if User.objects.filter(email=given_email):
+                return Response({"error": "email already exists"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"detail": "email is available"}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class CheckUsernameExistsorNotAPIView(APIView):
+    def post(self, request, *args, **kwargs):
+        serializer = UsernameExistorNotSerializer(data=request.data)
+        if serializer.is_valid():
+            given_username = serializer.validated_data.get('username')
+            if User.objects.filter(username=given_username):
+                return Response({"error": "username already exists"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"detail": "username is available"}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    

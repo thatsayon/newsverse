@@ -4,23 +4,10 @@ from django.contrib.postgres.fields import ArrayField, JSONField
 
 User = get_user_model()
 
-DIVISION_CHOICES = [
-        ('DH', 'Dhaka'),
-        ('CTG', 'Chittagong'),
-        ('KHL', 'Khulna'),
-        ('RJH', 'Rajshahi'),
-        ('BSL', 'Barisal'),
-        ('SYL', 'Sylhet'),
-        ('RNG', 'Rangpur'),
-        ('MYS', 'Mymensingh'),
-]
-
 class UserInfo(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user')
     address = models.CharField(max_length=120)
-    division = models.CharField(max_length=3, choices=DIVISION_CHOICES, null=True, blank=True)
-    state = models.CharField(max_length=120, null=True, blank=True)
-    city = models.CharField(max_length=120)
+    region = models.CharField(max_length=120)
     country = models.CharField(max_length=120)
 
     fav_topic = models.JSONField()

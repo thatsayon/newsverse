@@ -10,9 +10,7 @@ User = get_user_model()
 class UserRegistrationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
     address = serializers.CharField(max_length=120, write_only=True)
-    division = serializers.CharField(max_length=3, write_only=True, required=False)
-    state = serializers.CharField(max_length=120, write_only=True, required=False)
-    city = serializers.CharField(max_length=120, write_only=True)
+    region = serializers.CharField(max_length=120, write_only=True)
     country = serializers.CharField(max_length=120, write_only=True)
     favourite_topics = serializers.ListField(
         child=serializers.CharField(max_length=60), write_only=True
@@ -24,7 +22,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('username', 'email', 'password', 'full_name', 'date_of_birth', 'gender',
-                  'address', 'division', 'state', 'city', 'country', 'favourite_topics', 'lang')
+                  'address', 'region', 'country', 'favourite_topics', 'lang')
 
     def validate_password(self, value):
         if len(value) < 8:
@@ -45,16 +43,6 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         validate_password(value)
         return value
 
-    def validate(self, data):
-        division = data.get('division')
-        state = data.get('state')
-
-        if not division and not state:
-            raise serializers.ValidationError("One of 'division' or 'state' must be provided.")
-        if division and state:
-            raise serializers.ValidationError("Only one of 'division' or 'state' can be provided.")
-
-        return data
     
     def create(self, validated_data):
         favourite_topics = validated_data.pop('favourite_topics', [])
@@ -76,9 +64,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         user_info_data = {
             'user': user,
             'address': validated_data['address'],
-            'division': validated_data.get('division'),
-            'state': validated_data.get('state'),
-            'city': validated_data['city'],
+            'region': validated_data['region'],
             'country': validated_data['country'],
             'fav_topic': fav_topic,
             'lang': validated_data['lang']
@@ -133,3 +119,6 @@ class ChangePasswordSerializer(serializers.Serializer):
 
 class EmailUpdateSerializer(serializers.Serializer):
     new_email = serializers.EmailField(required=True)
+
+class UsernameExistorNotSerializer(serializers.Serializer):
+    username = serializers.CharField(max_length=120)

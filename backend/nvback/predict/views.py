@@ -22,7 +22,7 @@ class PredictedPost(APIView, PageNumberPagination):
             user_topics = [topic.lower() for topic in user_info.fav_topic.keys()]
             user_languages = user_info.lang
             user_country = user_info.country.lower()
-            user_city = user_info.city.lower()
+            user_region = user_info.region.lower()
             
             # Define the time threshold for recent posts (last 7 days)
             time_threshold = timezone.now() - timedelta(days=7)
@@ -51,13 +51,13 @@ class PredictedPost(APIView, PageNumberPagination):
             country_query_in_title = Q(title__icontains=user_country)
             country_query_in_topics = Q(topics__icontains=user_country)
             
-            # City queries
-            city_query_in_title = Q(title__icontains=user_city)
-            city_query_in_topics = Q(topics__icontains=user_city)
+            # region queries
+            region_query_in_title = Q(title__icontains=user_region)
+            region_query_in_topics = Q(topics__icontains=user_region)
             
             # Apply further filtering and ranking
             posts = posts.filter(
-                topics_query | title_query | country_query_in_title | country_query_in_topics | city_query_in_title | city_query_in_topics
+                topics_query | title_query | country_query_in_title | country_query_in_topics | region_query_in_title | region_query_in_topics
             ).distinct()
 
             posts = posts.annotate(
@@ -65,9 +65,9 @@ class PredictedPost(APIView, PageNumberPagination):
                     When(topics_query, then=1),
                     When(title_query, then=2),
                     When(country_query_in_topics, then=3),
-                    When(city_query_in_topics, then=3),
+                    When(region_query_in_topics, then=3),
                     When(country_query_in_title, then=4),
-                    When(city_query_in_title, then=4),
+                    When(region_query_in_title, then=4),
                     default=5,
                     output_field=IntegerField(),
                 )
