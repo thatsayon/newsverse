@@ -14,3 +14,27 @@ class Bookmark(models.Model):
     
     def __str__(self):
         return f"{self.user.username}'s bookmark on {self.post.title}"
+
+class History(models.Model):
+    INTERACTION_CHOICES = [
+        ('upvote', 'Upvote'),
+        ('downvote', 'Downvote'),
+        ('read', 'Read'),
+        ('share', 'Share'),
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    interaction_type = models.CharField(max_length=10, choices=INTERACTION_CHOICES)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} history created at {self.created_at}"
+
+class SearchHistory(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    searched_text = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} searched for {self.searched_text}"

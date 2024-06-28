@@ -1,13 +1,17 @@
 from django.shortcuts import render, get_object_or_404
-from rest_framework import status
+from rest_framework import status, generics, filters
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.pagination import PageNumberPagination
 from django.utils import timezone
+from django.utils.timezone import now, timedelta
+from uprofile.models import History, SearchHistory
 from .models import *
 from .serializers import *
-
+import django_filters
+from .utils import PostFilter
 
 class PostAPIView(APIView):
     permission_classes = [IsAuthenticated]
@@ -49,6 +53,8 @@ class UpvotePostAPIView(APIView):
             post.update_vote_counts()
             user_upvoted = True
             remove_downvote = False
+            history = History(user=user, post=post, interaction_type='upvote')
+            history.save()
 
         response_data = {
             'message': 'Upvote removed successfully' if not user_upvoted else 'Upvoted successfully',
@@ -91,6 +97,8 @@ class DownvotePostAPIView(APIView):
             post.update_vote_counts()
             user_downvoted = True
             remove_upvote = False
+            history = History(user=user, post=post, interaction_type='downvote')
+            history.save()
 
         response_data = {
             'message': 'Downvote removed successfully' if not user_downvoted else 'Downvoted successfully',
@@ -118,3 +126,34 @@ class MostUpvotedAPIView(APIView, PageNumberPagination):
             return response
         else:
             return Response({"error": "No post found"}, status=status.HTTP_404_NOT_FOUND)
+
+    
+class PostSearchAPIView(generics.ListAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+    permission_classes = [IsAuthenticated]  
+    filter_backends = [filters.SearchFilter, DjangoFilterBackend] 
+    search_fields = ['title', 'content', 'topics', 'lang']  
+    filterset_class = PostFilter 
+
+    def get(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        
+        page = self.paginate_queryset(queryset)
+        
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            searched_text = request.GET.get('search')
+            if searched_text:
+                try:
+                    last_search = SearchHistory.objects.filter(user=request.user).latest('created_at')
+                    last_search_text = last_search.searched_text if last_search else ''
+                except SearchHistory.DoesNotExist:
+                    last_search_text = ''
+                if searched_text != last_search_text:
+                    new_search = SearchHistory(user=request.user, searched_text=searched_text)
+                    new_search.save()
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)

@@ -1,7 +1,34 @@
 from rest_framework import serializers
-from post.models import Post 
+from post.models import Post
+from authentication.models import UserAccount
+from .models import *
 
 class BookmarkSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = ['id', 'title', 'content', 'thumbnail', 'thumbnail_url', 'slug', 'created_at', 'topics', 'lang', 'upvote_count', 'downvote_count', 'user_upvoted', 'user_downvoted', 'user_bookmarked']
+
+class PostSerializerforHistory(serializers.ModelSerializer):
+    class Meta:
+        model = Post 
+        fields = ['title', 'thumbnail', 'thumbnail_url', 'upvote_count', 'downvote_count']
+
+class UserSerializerforHistory(serializers.ModelSerializer):
+    class Meta:
+        model = UserAccount
+        fields = ['username', 'full_name']
+
+class HistorySerializer(serializers.ModelSerializer):
+    post = PostSerializerforHistory()
+    user = UserSerializerforHistory()
+
+    class Meta:
+        model = History
+        fields = ['id', 'user', 'post', 'interaction_type', 'created_at']
+
+class SearchHistorySerializer(serializers.ModelSerializer):
+    user = UserSerializerforHistory()
+
+    class Meta:
+        model = SearchHistory
+        fields = ['id', 'user', 'searched_text', 'created_at']

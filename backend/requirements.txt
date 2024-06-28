@@ -10,8 +10,10 @@ click==8.1.7
 cloudpathlib==0.16.0
 confection==0.1.4
 cymem==2.0.8
+dj-database-url==2.2.0
 Django==5.0.6
 django-cors-headers==4.3.1
+django-filter==24.2
 djangorestframework==3.15.1
 emoji==1.7.0
 en-core-web-sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.7.1/en_core_web_sm-3.7.1-py3-none-any.whl#sha256=86cc141f63942d4b2c5fcee06630fd6f904788d2f0ab005cce45aadb8fb73889
@@ -33,6 +35,7 @@ packaging==24.0
 pillow==10.3.0
 preshed==3.0.9
 psycopg2==2.9.9
+psycopg2-binary==2.9.9
 pycountry==23.12.11
 pydantic==2.7.2
 pydantic_core==2.18.3
