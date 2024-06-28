@@ -6,9 +6,11 @@ import Image from "next/image";
 import NewsVerse from "@/../public/news verse.png";
 import Cookies from "js-cookie";
 import { FaSearch } from "react-icons/fa";
+import { useRouter } from "next/navigation";
 
 export default function NavBar(token: any) {
   const pathname = usePathname();
+  const router = useRouter();
   const hideNavBarOnPages = ["/login", "/signup"];
 
   const [searchtext, setSearchtext] = useState<string>("");
@@ -32,8 +34,9 @@ export default function NavBar(token: any) {
   };
 
   const handleSearch = () => {
-    console.log("Search term submitted:", searchtext);
+    router.push(`/search?search=${searchtext}`);
   };
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       handleSearch();

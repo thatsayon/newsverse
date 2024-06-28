@@ -1,7 +1,9 @@
+import HistoryPage from '@/components/modules/history/History'
+
 export default function History() {
   return (
     <>
-      <h1>This is the history page</h1>
+    <HistoryPage />
     </>
   );
 }

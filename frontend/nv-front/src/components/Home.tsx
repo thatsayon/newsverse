@@ -54,12 +54,5 @@ const Home: React.FC = () => {
   return <div>{isAuthorized === true ? <Post posts={posts} /> : <WelcomeHome />}</div>;
 };
 
-const AuthorizedComponent: React.FC = () => {
-  return <div>Welcome to the authorized section!</div>;
-};
-
-const WelcomeComponent: React.FC = () => {
-  return <div>Welcome to News Verse</div>;
-};
 
 export default Home;

@@ -29,7 +29,7 @@ export default function MostUpvoted() {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BASE_URL}/post/most-upvoted/?page=${page}`,
         {
-          next: { revalidate: 60 }, 
+          next: { revalidate: 60 },
           method: "GET",
           headers: {
             Authorization: `Token ${userToken}`,
@@ -62,7 +62,7 @@ export default function MostUpvoted() {
 
   return (
     <>
-      <div className="grid lg:grid-cols-4 md:grid-cols-2 mx-4 gap-4">
+      <div className="grid lg:grid-cols-5 md:grid-cols-2 mx-4 gap-6">
         {posts.map((data) => (
           <Card key={data.id} post_data={data} />
         ))}
@@ -97,8 +97,10 @@ export default function MostUpvoted() {
         )}
       </div>
       {!hasMore && (
-        <div>
-          <h1>No more post. Come back some time later</h1>
+        <div className="flex justify-center">
+          <h1 className="text-center bg-[#222] font-semibold rounded-2xl px-4 py-2 mb-7 select-none inline hover:text-main-one cursor-pointer transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300">
+            Currently no new posts. Please check back later.
+          </h1>
         </div>
       )}
     </>
