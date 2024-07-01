@@ -11,8 +11,9 @@ class CrawlWwebsites(APIView):
     permission_classes = [IsAuthenticated, IsSelectedUser]
 
     def post(self, request):
-        data = crawl_data("https://feeds.bbci.co.uk/news/world/rss.xml")
-        # data = crawl_data("https://www.jagonews24.com/rss/rss.xml")
+        data1 = crawl_data("https://feeds.bbci.co.uk/news/world/rss.xml")
+        data2 = crawl_data("https://www.jagonews24.com/rss/rss.xml")
+        data = data1 + data2
         for d in data:
             add_post(d['title'], d['content'], d['thumbnail'])
 

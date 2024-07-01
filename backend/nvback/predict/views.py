@@ -72,7 +72,6 @@ class PredictedPost(APIView, PageNumberPagination):
                     output_field=IntegerField(),
                 )
             ).order_by('rank', '-created_at')
-
             if posts.exists():
                 result = self.paginate_queryset(posts, request, view=self)
                 serializer = PostSerializer(result, many=True, context={'request': request})

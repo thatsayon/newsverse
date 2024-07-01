@@ -14,8 +14,14 @@ def crawl_data(url: str):
         news_item['title'] = item.title.text 
         news_item['content'] = item.description.text 
         news_item['news_link'] = item.link.text 
-        news_item['thumbnail'] = item.find("media:thumbnail").get('url')
-        # news_item['thumbnail'] = item.find("media:content").get('url')
+
+        try:
+            news_item['thumbnail'] = item.find("media:thumbnail").get('url')
+        except AttributeError:
+            try:
+                news_item['thumbnail'] = item.find("media:content").get('url')
+            except AttributeError:
+                news_item['thumbnail'] = None
         news_items.append(news_item)
 
     return news_items
