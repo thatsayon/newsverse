@@ -17,11 +17,19 @@ class Post(models.Model):
     title = models.CharField(_("Title"), max_length=120)
     content = models.TextField(_("Content"))
     thumbnail = models.ImageField(_("Thumbnail"), upload_to="img/thumbnail", null=True, blank=True)
-    thumbnail_url = models.URLField(_("Thumbnail URL"), max_length=200, null=True, blank=True)
+    thumbnail_url = models.URLField(_("Thumbnail URL"), null=True, blank=True)
     slug = models.SlugField(unique=True, blank=True, max_length=255)
     created_at = models.DateTimeField(_("Created At"), auto_now_add=True)
     topics = ArrayField(models.CharField(max_length=60))
     lang = models.CharField(_("Language"), max_length=2, choices=LANGUAGE_CHOICES, blank=True, null=True)
+    creator = models.CharField(_("Creator"), max_length=120)
+    creator_link = models.URLField(_("Creator Link"), blank=True, null=True)
+    post_url = models.URLField(_("Post Url"), unique=True)
+    creator_created_at = models.CharField(_("Creator Created At"), null=True, blank=True)
+    post_type  = models.CharField(max_length=10, choices=[
+        ("web", "Website"),
+        ("yt", "YouTube")
+    ])
 
     upvote_count = models.PositiveIntegerField(default=0)
     downvote_count= models.PositiveIntegerField(default=0)
