@@ -85,7 +85,7 @@ const Bookmark: React.FC = () => {
           </div>
         </div>
       ) : (
-        <div className="grid lg:grid-cols-4 md:grid-cols-2 mx-4 gap-4">
+        <div className="grid lg:grid-cols-4 md:grid-cols-2 m-8 gap-4">
           {post?.results.map((data) => {
             return (
               <>

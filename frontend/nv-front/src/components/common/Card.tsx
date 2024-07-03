@@ -31,8 +31,10 @@ import {
   RedditShareButton,
   RedditIcon,
 } from "react-share";
+import { format } from "util";
 
 export default function Card(post_data: any) {
+  console.log(post_data);
   const [isFlipped, setIsFlipped] = useState<boolean>(false);
   const [blind, setBlind] = useState<number | null>(null);
   const cardRef = useRef<HTMLDivElement>(null);
@@ -182,6 +184,35 @@ export default function Card(post_data: any) {
     setShareModelOpen(false);
   };
 
+  const formatCardDate = (dateString: string): string => {
+    const inputDate = new Date(dateString);
+    const today = new Date();
+
+    today.setHours(0, 0, 0, 0);
+
+    const yesterday = new Date(today);
+    yesterday.setDate(today.getDate() - 1);
+
+    if (inputDate.toDateString() === today.toDateString()) {
+      return "today";
+    }
+
+    if (inputDate.toDateString() === yesterday.toDateString()) {
+      return "yesterday";
+    }
+
+    const options: Intl.DateTimeFormatOptions = {
+      weekday: "short",
+      day: "numeric",
+      month: "short",
+    };
+    const formattedDate = new Intl.DateTimeFormat("en-US", options).format(
+      inputDate
+    );
+
+    return formattedDate;
+  };
+
   return (
     <>
       <div
@@ -195,15 +226,22 @@ export default function Card(post_data: any) {
               <Image src={NV} alt="author icon" width={35} height={35} />
             </div>
             <div>
-              <p className="text-lg">Real Python</p>
-              <p className="text-sm">May 1, 2024</p>
+              <p className="text-lg">{data.creator}</p>
+              <p className="text-sm">
+                {formatCardDate(data.creator_created_at)}
+              </p>
             </div>
           </div>
 
           {/* <p className="text-sm mr-2 text-black">Read Post</p> */}
 
           <div className="flex items-center">
-            <div className="relative inline-block cursor-pointer group hover:text-main-one hover:bg-nav-dark p-2 hover:rounded-lg">
+            <div
+              className="relative inline-block cursor-pointer group hover:text-main-one hover:bg-nav-dark p-2 hover:rounded-lg"
+              onClick={() => {
+                window.open(data.post_url, "_blank", "noopener, noreferrer");
+              }}
+            >
               {/* Icon */}
               <FaExternalLinkAlt className="text-lg" />
 
@@ -233,10 +271,10 @@ export default function Card(post_data: any) {
               }}
               sx={{
                 ".MuiPaper-root": {
-                  backgroundColor: "#333", 
-                  color: "white", 
-                  minWidth: "200px", 
-                  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)", 
+                  backgroundColor: "#333",
+                  color: "white",
+                  minWidth: "200px",
+                  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
                   borderRadius: "8px",
                   marginTop: ".3rem",
                 },
@@ -271,7 +309,10 @@ export default function Card(post_data: any) {
                 </div>
               </MenuItem>
               <MenuItem
-                onClick={handleCloseMenu}
+                onClick={() => {
+                  window.open(data.post_url, "_blank", "noopener, noreferrer");
+                  handleCloseMenu();
+                }}
                 sx={{ ":hover": { backgroundColor: "#444" } }}
               >
                 <div className="flex items-center">
@@ -445,7 +486,7 @@ export default function Card(post_data: any) {
         )}
         <div className="flex mt-auto mb-[2px]">
           <div
-            className={`flex mr-2 gap-1 cursor-pointer px-2 py-1 bg-nav-dark rounded-lg justify-center items-center ${
+            className={`flex items-center justify-center mr-2 gap-1 cursor-pointer px-2 py-1 bg-nav-dark rounded-lg ${
               userUpvoted ? "text-green-400" : ""
             } hover:text-green-400`}
             onClick={handleUpvote}

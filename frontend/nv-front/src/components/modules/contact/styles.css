@@ -1,0 +1,66 @@
+.inputBox {
+  position: relative;
+  width: 100%;
+}
+
+/* Input field styling */
+.inputBox input,
+.inputBox select,
+.inputBox textarea {
+  position: relative;
+  width: 100%;
+  background: #333;
+  border: none;
+  outline: none;
+  padding: 25px 35px 7.5px 10px; /* Adjusted padding to make room for the icon */
+  border-radius: 4px;
+  color: #fff;
+  font-weight: 500;
+  font-size: 1em;
+}
+
+/* Label styling */
+.inputBox i {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-style: normal;
+  color: #aaa;
+  transition: 0.5s ease;
+  pointer-events: none;
+}
+
+/* Label adjustment on input focus and when text is present */
+.inputBox input:focus ~ i,
+.inputBox input:not(:placeholder-shown) ~ i {
+  top: 5px;
+  transform: translateY(0);
+  font-size: 0.75em;
+  color: #fff;
+}
+
+.inputBox textarea:focus ~ i,
+.inputBox textarea:not(:placeholder-shown) ~ i {
+  top: 5px;
+  transform: translateY(0);
+  font-size: 0.75em;
+  color: #fff;
+}
+
+/* Icon styling */
+.inputBox .password-icon {
+  position: absolute;
+  right: 10px; /* Align icon to the right */
+  top: 50%; /* Vertically center the icon */
+  transform: translateY(-50%);
+  color: #aaa; /* Grey color for the icon */
+  font-size: 1.5em; /* Adjust the size of the icon */
+  cursor: pointer; /* Change cursor to pointer to indicate interactivity */
+  transition: color 0.3s ease; /* Smooth color transition */
+}
+
+/* Icon color change on hover */
+.inputBox .password-icon:hover {
+  color: #fff; /* Change color to white on hover */
+}

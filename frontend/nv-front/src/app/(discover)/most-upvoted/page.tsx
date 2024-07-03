@@ -62,7 +62,7 @@ export default function MostUpvoted() {
 
   return (
     <>
-      <div className="grid lg:grid-cols-5 md:grid-cols-2 mx-4 gap-6">
+      <div className="grid lg:grid-cols-5 md:grid-cols-2 m-8 gap-6">
         {posts.map((data) => (
           <Card key={data.id} post_data={data} />
         ))}
