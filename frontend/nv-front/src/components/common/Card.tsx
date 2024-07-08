@@ -32,9 +32,40 @@ import {
   RedditIcon,
 } from "react-share";
 import { format } from "util";
+import "./CardStyle.css";
+import {
+  Oswald,
+  Roboto,
+  Roboto_Slab,
+  Poppins,
+  Merienda,
+} from "next/font/google";
 
+const roboto = Roboto({
+  weight: "400",
+  subsets: ["latin"],
+});
+
+const roboto_slab = Roboto_Slab({
+  weight: "400",
+  subsets: ["latin"],
+});
+
+const poppins = Poppins({
+  weight: "400",
+  subsets: ["latin"],
+});
+
+const merienda = Merienda({
+  weight: "500",
+  subsets: ["latin"],
+});
+
+const oswald = Oswald({
+  weight: "400",
+  subsets: ["latin"],
+});
 export default function Card(post_data: any) {
-  console.log(post_data);
   const [isFlipped, setIsFlipped] = useState<boolean>(false);
   const [blind, setBlind] = useState<number | null>(null);
   const cardRef = useRef<HTMLDivElement>(null);
@@ -175,7 +206,6 @@ export default function Card(post_data: any) {
   };
 
   const handleShareModelOpen = () => {
-    console.log("open");
     setShareModelOpen(true);
     handleCloseMenu();
   };
@@ -226,8 +256,10 @@ export default function Card(post_data: any) {
               <Image src={NV} alt="author icon" width={35} height={35} />
             </div>
             <div>
-              <p className="text-lg">{data.creator}</p>
-              <p className="text-sm">
+              <p className="text-lg" style={roboto_slab.style}>
+                {data.creator}
+              </p>
+              <p className="text-sm" style={poppins.style}>
                 {formatCardDate(data.creator_created_at)}
               </p>
             </div>
@@ -428,8 +460,8 @@ export default function Card(post_data: any) {
                           WebkitLineClamp: 2,
                           overflow: "hidden",
                           textOverflow: "ellipsis",
-                          maxHeight: "3em", // Adjust based on your line height
-                          lineHeight: "1.5em", // Adjust based on your design
+                          maxHeight: "3em",
+                          lineHeight: "1.5em", 
                           wordBreak: "break-word",
                         }}
                       >
@@ -453,22 +485,45 @@ export default function Card(post_data: any) {
           </div>
         </div>
         <div className="mb-1 flex h-1/6" onClick={flipCard}>
-          <p className="text-xl">{data.title}</p>
+          <p className="text-xl" style={roboto.style}>
+            {data.title}
+          </p>
         </div>
         {blind === data.id ? (
-          <div className="overflow-y-scroll h-[220px]">{data.content}</div>
+          <div
+            className="overflow-y-scroll h-[220px] mt-2 border-t-2 py-2 text-balance hide-scrollbar"
+            style={roboto.style}
+          >
+            {data.content}
+
+            <div className="flex mt-2 justify-center">
+              <button
+                className="bg-white text-black rounded-lg px-2 font-semibold py-1"
+                onClick={() => {
+                  window.open(data.post_url, "_blank", "noopener, noreferrer");
+                }}
+              >
+                Read full article
+              </button>
+            </div>
+          </div>
         ) : (
           <>
-            <div className="flex mb-2 mt-2 text-xs" onClick={flipCard}>
+            <div
+              className="flex mb-2 mt-2 text-xs space-x-2 overflow-hidden"
+              onClick={flipCard}
+            >
               {data.topics.slice(0, 4).map((topic: string, index: number) => (
                 <p
                   key={index}
-                  className="px-2 py-1 mr-2 bg-nav-dark rounded-md"
+                  className="px-2 py-1 bg-nav-dark rounded-md overflow-hidden text-ellipsis whitespace-nowrap"
+                  style={{ maxWidth: "80px", ...roboto.style }} 
                 >
                   {topic}
                 </p>
               ))}
             </div>
+
             <div className="flex min-h-56 justify-center max-h-60">
               <a href="https://media.geeksforgeeks.org/wp-content/cdn-uploads/20221113234125/Best-Python-IDE-For-Linux-in-2023.jpg">
                 <img
@@ -484,7 +539,7 @@ export default function Card(post_data: any) {
             </div>
           </>
         )}
-        <div className="flex mt-auto mb-[2px]">
+        <div className="flex items-center mt-auto mb-[2px]">
           <div
             className={`flex items-center justify-center mr-2 gap-1 cursor-pointer px-2 py-1 bg-nav-dark rounded-lg ${
               userUpvoted ? "text-green-400" : ""
@@ -492,7 +547,9 @@ export default function Card(post_data: any) {
             onClick={handleUpvote}
           >
             <LuArrowBigUp className="text-2xl" />
-            <p className="font-bold">{upVoteVal}</p>
+            <p className="font-bold" style={merienda.style}>
+              {upVoteVal}
+            </p>
           </div>
           <div
             className={`flex mr-2 cursor-pointer px-2 py-1 bg-nav-dark rounded-lg justify-center items-center ${
@@ -501,26 +558,32 @@ export default function Card(post_data: any) {
             onClick={handleDownvote}
           >
             <LuArrowBigDown className="mr-1 text-2xl" />
-            <p className="font-bold">{downVoteVal}</p>
+            <p className="font-bold" style={merienda.style}>
+              {downVoteVal}
+            </p>
           </div>
           <div
             className="flex mr-2 cursor-pointer px-2 py-1 bg-nav-dark items-center justify-center rounded-lg hover:text-main-one"
             onClick={() => setBlind(data.id === blind ? null : data.id)}
           >
             {data.id === blind ? (
-              <CiUnread className="text-xl" />
+              <CiUnread className="text-2xl" />
             ) : (
-              <CiRead className="text-xl" />
+              <CiRead className="text-2xl" />
             )}
           </div>
           <div
-            className="flex mr-2 cursor-pointer px-2 py-1 bg-nav-dark items-center justify-center rounded-lg hover:text-main-one"
+            className="flex mr-2 cursor-pointer px-2 py-1.5 bg-nav-dark items-center justify-center rounded-lg hover:text-main-one"
             onClick={handleBookmark}
           >
-            {bookmarked ? <FaBookmark /> : <FaRegBookmark />}
+            {bookmarked ? (
+              <FaBookmark className="text-xl" />
+            ) : (
+              <FaRegBookmark className="text-xl" />
+            )}
             <Toaster />
           </div>
-          <div className="flex cursor-pointer px-2 py-1 bg-nav-dark items-center justify-center rounded-lg hover:text-main-one">
+          <div className="flex cursor-pointer px-2 py-1.5 bg-nav-dark items-center justify-center rounded-lg hover:text-main-one">
             <IoIosLink className="text-xl" />
           </div>
         </div>

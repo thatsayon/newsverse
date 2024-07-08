@@ -32,3 +32,13 @@ class SearchHistorySerializer(serializers.ModelSerializer):
     class Meta:
         model = SearchHistory
         fields = ['id', 'user', 'searched_text', 'created_at']
+
+class CustomizeSerializer(serializers.ModelSerializer):
+    language = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Customize
+        fields = '__all__'
+
+    def get_language(self, obj):
+        return obj.language

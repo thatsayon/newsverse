@@ -20,6 +20,8 @@ import { MdOutlineFeedback } from "react-icons/md";
 import { PiContactlessPaymentBold } from "react-icons/pi";
 import { IoHomeOutline } from "react-icons/io5";
 
+import Customize from "../modules/customize/CustomMain";
+
 const getNavLinkClassNames = (
   pathname: string,
   href: string,
@@ -30,10 +32,13 @@ const getNavLinkClassNames = (
     : `hover:bg-zinc-700 hover:text-white mt-${mat} py-2 w-full`;
 };
 
+
 export default function Sidebar({ children }: { children: React.ReactNode }) {
   const [expanded, setExpanded] = useState<boolean>(false);
   const pathname = usePathname();
   const [userToken, setUserToken] = useState<string | undefined>(undefined);
+  const [customizeModelOpen, setCustomizeModelOpen] = useState<boolean>(true);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   useEffect(() => {
     setUserToken(Cookies.get("token"));
@@ -41,6 +46,19 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
 
   const hideNavBarOnPages = ["/login", "/signup"];
   const isActive = (path: string) => path === pathname;
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
+  };
+  const handleCustomizeModelClose = () => {
+    setCustomizeModelOpen(false);
+  };
+
+  const handleCustomizeModelOpen = () => {
+    setCustomizeModelOpen(true);
+    handleCloseMenu();
+  };
+
+  
 
   if (hideNavBarOnPages.includes(pathname)) {
     return <div>{children}</div>;
@@ -92,12 +110,16 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
               <RiHistoryFill className="text-xl m-auto" />
             </Link>
 
-            <Link
-              href="/customize"
-              className={getNavLinkClassNames(pathname, "/customize")}
+            <div
+              onClick={handleCustomizeModelOpen}
+              className={
+                customizeModelOpen
+                  ? "bg-zinc-700 text-white mt-0 py-2 w-full cursor-pointer"
+                  : "hover:bg-zinc-700 hover:text-white mt-0 py-2 w-full cursor-pointer"
+              }
             >
               <GoGear className="text-xl m-auto" />
-            </Link>
+            </div>
           </div>
         ) : (
           <div className="w-56 text-gray-300 pt-4 h-screen flex flex-col font-semibold shadow-lg border-r-2 border-slate-800">
@@ -177,40 +199,71 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
                       History
                     </li>
                   </Link>
-                  <Link
-                    href="/customize"
+                  <div
+                    onClick={handleCustomizeModelOpen}
                     className={
-                      isActive("/customize")
-                        ? " bg-zinc-700 text-white"
-                        : " hover:bg-zinc-700 hover:text-white"
+                      customizeModelOpen
+                        ? "bg-zinc-700 text-white cursor-pointer"
+                        : "hover:bg-zinc-700 hover:text-white cursor-pointer"
                     }
                   >
                     <li className="flex items-center pl-6 py-1">
                       <GoGear className="mr-1" />
                       Customize
                     </li>
-                  </Link>
+                  </div>
                 </ul>
               </div>
               <div className="mt-6">
                 <h1 className="text-lg pl-4">Others</h1>
-                <ul className="flex flex-col gap-1 pt-1">
-                  <li className="flex items-center pl-6 py-1">
-                    <PiContactlessPaymentBold className="mr-1" />
-                    Contact Us
-                  </li>
-                  <li className="flex items-center pl-6 py-1">
-                    <FaRegQuestionCircle className="mr-1" />
-                    About Us
-                  </li>
-                  <li className="flex items-center pl-6 py-1">
-                    <MdOutlineFeedback className="mr-1" />
-                    Feedback
-                  </li>
+                <ul className="flex flex-col pt-1">
+                  <Link
+                    href="/contact-us"
+                    className={
+                      isActive("/contact-us")
+                        ? " bg-zinc-700 text-white"
+                        : " hover:bg-zinc-700 hover:text-white"
+                    }
+                  >
+                    <li className="flex items-center pl-6 py-1">
+                      <PiContactlessPaymentBold className="mr-1" />
+                      Contact Us
+                    </li>
+                  </Link>
+                  <Link
+                    href="/about"
+                    className={
+                      isActive("/about")
+                        ? " bg-zinc-700 text-white"
+                        : " hover:bg-zinc-700 hover:text-white"
+                    }
+                  >
+                    <li className="flex items-center pl-6 py-1">
+                      <FaRegQuestionCircle className="mr-1" />
+                      About Us
+                    </li>
+                  </Link>
+                  <Link
+                    href="/feedback"
+                    className={
+                      isActive("/feedback")
+                        ? " bg-zinc-700 text-white"
+                        : " hover:bg-zinc-700 hover:text-white"
+                    }
+                  >
+                    <li className="flex items-center pl-6 py-1">
+                      <MdOutlineFeedback className="mr-1" />
+                      Feedback
+                    </li>
+                  </Link>
                 </ul>
               </div>
             </div>
           </div>
+        )}
+
+        {customizeModelOpen && (
+          <Customize onClose={handleCustomizeModelClose}/>
         )}
       </div>
       {/* Main Content Area */}

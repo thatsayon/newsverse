@@ -23,7 +23,7 @@ class Post(models.Model):
     topics = ArrayField(models.CharField(max_length=60))
     lang = models.CharField(_("Language"), max_length=2, choices=LANGUAGE_CHOICES, blank=True, null=True)
     creator = models.CharField(_("Creator"), max_length=120)
-    creator_link = models.URLField(_("Creator Link"), blank=True, null=True)
+    creator_link = models.URLField(_("Creator Link"))
     post_url = models.URLField(_("Post Url"), unique=True)
     creator_created_at = models.CharField(_("Creator Created At"), null=True, blank=True)
     post_type  = models.CharField(max_length=10, choices=[

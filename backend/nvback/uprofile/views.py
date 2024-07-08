@@ -8,6 +8,7 @@ from .models import *
 from .serializers import *
 from post.models import Post
 from post.serializers import PostSerializer
+from predict.models import UserInfo
 
 class BookmarkPostAPIView(APIView):
     permission_classes = [IsAuthenticated]
@@ -126,3 +127,23 @@ class SearchHistoryDeleteAPIView(APIView):
             {"message": "Search history record deleted successfully."},
             status=status.HTTP_204_NO_CONTENT
         )
+
+class CustomizeAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, format=None):
+        customize = get_object_or_404(Customize, user=request.user)
+        serializers = CustomizeSerializer(customize)
+        return Response(serializers.data)
+    
+    def patch(self, request, format=None):
+        customize = get_object_or_404(Customize, user=request.user)
+        user_info = get_object_or_404(UserInfo, user=request.user)
+        if 'language' in request.data:
+            user_info.lang = request.data['language']
+            user_info.save()
+        serializer = CustomizeSerializer(customize, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

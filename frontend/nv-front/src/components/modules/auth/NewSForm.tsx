@@ -188,7 +188,7 @@ export default function NewForm() {
     const hasUpperCase = /[A-Z]/.test(inputValue);
     const hasLowerCase = /[a-z]/.test(inputValue);
     const hasDigit = /\d/.test(inputValue);
-    const hasSpecialChar = /[@$!%*?&]/.test(inputValue);
+    const hasSpecialChar = /[#@$!%*?&]/.test(inputValue);
     const hasMinLength = inputValue.length >= 8;
 
     // Determine the strength of the password

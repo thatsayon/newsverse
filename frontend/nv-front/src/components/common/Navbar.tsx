@@ -1,5 +1,5 @@
 "use client";
-import Link from "next/link";
+import NavLink from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import Image from "next/image";
@@ -49,7 +49,8 @@ export default function NavBar(token: any) {
   return (
     <>
       <nav className="flex justify-between py-2 bg-[#121213] rounded-b border-b-2 border-slate-800 overflow-hidden">
-        <div>
+        <NavLink href="/">
+          <div>
           <Image
             src={NewsVerse}
             alt="news verse"
@@ -58,6 +59,7 @@ export default function NavBar(token: any) {
             className="ml-3"
           />
         </div>
+        </NavLink>
 
         {!!token.token ? (
           <div>
@@ -86,18 +88,20 @@ export default function NavBar(token: any) {
             <>
               <div
                 onClick={handleLogout}
-                className="text-main-two font-bold bg-main-one px-4 py-1 rounded mx-2 text-xl cursor-pointer"
+                className="text-black font-bold bg-main-one px-4 py-1.5 rounded mx-2 text-xl cursor-pointer"
               >
-                Logout
+                <p>Logout</p>
               </div>
             </>
           ) : (
             <>
-              <Link href="/login" className="">
-                <div className="text-main-two font-bold bg-main-one px-4 py-1 rounded mx-2 text-xl">
-                  Login
+              <NavLink href="/login" className="font-semibold">
+                <div className="text-black bg-main-one px-4 py-1.5 rounded mx-2 text-xl">
+                  <p>
+                    Login
+                  </p>
                 </div>
-              </Link>
+              </NavLink>
             </>
           )}
         </div>

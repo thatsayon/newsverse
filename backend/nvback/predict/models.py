@@ -5,7 +5,7 @@ from django.contrib.postgres.fields import ArrayField, JSONField
 User = get_user_model()
 
 class UserInfo(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_info')
     address = models.CharField(max_length=120)
     region = models.CharField(max_length=120)
     country = models.CharField(max_length=120)

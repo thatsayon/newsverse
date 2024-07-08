@@ -80,8 +80,8 @@ def bangla_topics(text):
     return ordered_nouns
 
 
-def add_post(title: str, content: str, thumbnail_url: str):
-    existing_post = Post.objects.filter(title=title).exists()
+def add_post(title: str, content: str, thumbnail_url: str, creator: str, creator_link: str, post_url: str, creator_created_at: str, post_type: str):
+    existing_post = Post.objects.filter(title=title, post_url=post_url).exists()
     if existing_post: return 
     country_names = [country.name for country in pycountry.countries]
     country_alpha2 = [country.alpha_2 for country in pycountry.countries]
@@ -94,8 +94,10 @@ def add_post(title: str, content: str, thumbnail_url: str):
 
     result = []
 
+   
+
     for match in unique_matches:
-        if len(match) == 2:  # If it's an alpha_2 code
+        if len(match) == 2:  
             country = pycountry.countries.get(alpha_2=match)
             if country:
                 result.append(country.name)
@@ -111,12 +113,24 @@ def add_post(title: str, content: str, thumbnail_url: str):
     elif language[0] == 'bn':
         res = bangla_topics(title)
         result.extend(res)
-
+    if post_type == "yt":
+        result.append(creator)
     result = list(set(result))
 
     
     # print(f"Title {title} \n Content {content} \n thumbnail_url {thumbnail_url} \n topics {result} \n language {language[0]}")
-    post = Post.objects.create(title=title, content=content, thumbnail_url=thumbnail_url, topics=result, lang=language[0])
+    post = Post.objects.create(
+        title=title, 
+        content=content, 
+        thumbnail_url=thumbnail_url, 
+        topics=result, 
+        lang=language[0],
+        creator=creator,
+        creator_link=creator_link,
+        post_url=post_url,
+        creator_created_at=creator_created_at,
+        post_type=post_type
+    )
     post.save()
 
     

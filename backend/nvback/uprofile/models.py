@@ -38,3 +38,22 @@ class SearchHistory(models.Model):
 
     def __str__(self):
         return f"{self.user.username} searched for {self.searched_text}"
+
+class Customize(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    layout = models.CharField(max_length=8, choices=[
+        ("grid", "Grid"),
+        ("list", "List")
+    ], default="grid")
+    show_video_news = models.BooleanField(default=True)
+    send_email = models.BooleanField(default=True)
+
+    @property
+    def language(self):
+        try:
+            return self.user.user_info.all()[0].lang
+        except Exception:
+            return None 
+    
+    def __str__(self):
+        return f"Customize setting for {self.user.username}"

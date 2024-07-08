@@ -1,5 +1,6 @@
 @keyframes dance {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
   }
   50% {
@@ -9,4 +10,33 @@
 
 .dancing {
   animation: dance 1s infinite;
+}
+
+.scroll-to-top-button {
+  position: fixed;
+  bottom: -100px; /* Start below the visible viewport */
+  right: 20px;
+  background-color: #fff; /* White background */
+  color: #000; /* Black text */
+  border-radius: 50%; /* Rounded button */
+  padding: 12px; /* Padding for size */
+  font-size: 24px; /* Size of the icon */
+  z-index: 50; /* Ensure it stays above other elements */
+  cursor: pointer;
+  transition: transform 0.4s ease, opacity 0.4s ease; /* Animation for appearance */
+}
+
+.scroll-to-top-button.visible {
+  transform: translateY(-120px); /* Move up into the visible area */
+  opacity: 1; /* Fully opaque */
+}
+
+.scroll-to-top-button.hidden {
+  transform: translateY(0); /* Stay hidden below */
+  opacity: 0; /* Fully transparent */
+}
+
+.scroll-to-top-button:hover {
+  background-color: #d7f64e;
+  color: black; /* Change text color on hover */
 }

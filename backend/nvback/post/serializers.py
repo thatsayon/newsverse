@@ -10,7 +10,7 @@ class PostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ['id', 'title', 'content', 'thumbnail', 'thumbnail_url', 'slug', 'created_at', 'topics', 'lang', 'upvote_count', 'downvote_count', 'user_upvoted', 'user_downvoted', 'user_bookmarked']
+        fields = ['id', 'title', 'content', 'thumbnail', 'thumbnail_url', 'slug', 'created_at', 'topics', 'lang', 'creator', 'creator_link', 'post_url', 'creator_created_at', 'post_type', 'upvote_count', 'downvote_count', 'user_upvoted', 'user_downvoted', 'user_bookmarked']
     
     def get_user_upvoted(self, obj):
         request = self.context.get('request')

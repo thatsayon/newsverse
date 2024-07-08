@@ -8,4 +8,5 @@ urlpatterns = [
     path('history/<int:history_id>/', HistoryDeleteAPIView.as_view(), name='history-delete'),
     path('search-history/', SearchHistoryAPIView.as_view(), name="search-history"),
     path('search-history/<int:search_history_id>/', SearchHistoryDeleteAPIView.as_view(), name="search-history-delete"),
+    path('customize/', CustomizeAPIView.as_view(), name='customize-detail'),
 ]
