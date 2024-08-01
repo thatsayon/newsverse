@@ -1,7 +1,10 @@
 from rest_framework import serializers
 from post.models import Post
 from authentication.models import UserAccount
+from django.contrib.auth import get_user_model
 from .models import *
+
+User = get_user_model()
 
 class BookmarkSerializer(serializers.ModelSerializer):
     class Meta:
@@ -42,3 +45,8 @@ class CustomizeSerializer(serializers.ModelSerializer):
 
     def get_language(self, obj):
         return obj.language
+
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'full_name', 'email', 'date_joined']

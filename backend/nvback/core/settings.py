@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'predict',
     'uprofile',
     'crawl',
+    'analytics'
 ]
 
 

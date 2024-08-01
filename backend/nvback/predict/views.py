@@ -4,11 +4,11 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
-from django.db.models import Q, Case, When, IntegerField
+from django.db.models import Q, Case, When, IntegerField, Exists, OuterRef, Subquery
 from django.utils import timezone
 from datetime import timedelta
 from post.models import Post
-from predict.models import UserInfo
+from predict.models import UserInfo, UserReadRecord
 from post.serializers import PostSerializer
 
 class PredictedPost(APIView, PageNumberPagination):
@@ -16,45 +16,58 @@ class PredictedPost(APIView, PageNumberPagination):
 
     def get(self, request):
         try:
-            user = request.user 
+            user = request.user
             user_info = UserInfo.objects.get(user=user)
 
             user_topics = [topic.lower() for topic in user_info.fav_topic.keys()]
             user_languages = user_info.lang
             user_country = user_info.country.lower()
             user_region = user_info.region.lower()
-            
+
             # Define the time threshold for recent posts (last 7 days)
             time_threshold = timezone.now() - timedelta(days=7)
-            
-            # Initial filter for user languages
+
+            # Subquery to get the read_count for UserReadRecord entries
+            read_posts_subquery = UserReadRecord.objects.filter(
+                user=user,
+                post=OuterRef('id')
+            ).values('read_count')
+
+            # Initial filter for user languages and recent posts
             posts = Post.objects.filter(
                 lang__in=user_languages,
                 created_at__gte=time_threshold
-            ).order_by('-created_at')
+            ).annotate(
+                read_count=Subquery(read_posts_subquery[:1])
+            )
 
-            
-            if not posts.exists():
-                return Response({"error": "No posts found for this user"}, status=status.HTTP_404_NOT_FOUND)
-            
+            # Separate posts based on read_count
+            unread_posts = posts.filter(read_count__isnull=True)
+            read_once_posts = posts.filter(read_count=1)
+            read_twice_posts = posts.filter(read_count=2)
+            read_three_times_posts = posts.filter(read_count=3)
+
+            # Exclude posts that have been read three times
+            posts = unread_posts | read_once_posts | read_twice_posts
+
             # Construct topic queries
             topics_query = Q()
             for topic in user_topics:
                 topics_query |= Q(topics__icontains=topic)
-                
+
             # Construct title query
             title_query = Q()
             for topic in user_topics:
                 title_query |= Q(title__icontains=topic)
-                
+
             # Country queries
             country_query_in_title = Q(title__icontains=user_country)
             country_query_in_topics = Q(topics__icontains=user_country)
-            
-            # region queries
+
+            # Region queries
             region_query_in_title = Q(title__icontains=user_region)
             region_query_in_topics = Q(topics__icontains=user_region)
-            
+
             # Apply further filtering and ranking
             posts = posts.filter(
                 topics_query | title_query | country_query_in_title | country_query_in_topics | region_query_in_title | region_query_in_topics
@@ -72,9 +85,17 @@ class PredictedPost(APIView, PageNumberPagination):
                     output_field=IntegerField(),
                 )
             ).order_by('rank', '-created_at')
-            if posts.exists():
-                result = self.paginate_queryset(posts, request, view=self)
+
+            # Reorder posts according to read_count rules
+            final_posts = list(posts.filter(read_count__isnull=True))
+            final_posts.extend(list(posts.filter(read_count=1)))
+            final_posts.extend(list(posts.filter(read_count=2)))
+
+            if final_posts:
+                # Paginate the filtered posts
+                result = self.paginate_queryset(final_posts, request, view=self)
                 serializer = PostSerializer(result, many=True, context={'request': request})
+
                 response = self.get_paginated_response(serializer.data)
                 response.status_code = status.HTTP_200_OK
                 return response

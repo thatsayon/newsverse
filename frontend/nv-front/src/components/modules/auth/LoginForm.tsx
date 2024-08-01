@@ -83,8 +83,8 @@ export default function LoginForm() {
                   <i>Password</i>
                 </div>
                 <div className="links">
-                  <a href="#">Forgot Password ?</a>
-                  <a href="/signup">Signup</a>
+                  <a href="/recover">Forgotten Password ?</a>
+                  <a href="/signup">Sign Up</a>
                 </div>
                 {error && <p style={{ color: "red" }}>{error}</p>}
                 <div className="inputBox">

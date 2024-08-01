@@ -8,11 +8,19 @@ from rest_framework.pagination import PageNumberPagination
 from django.utils import timezone
 from django.utils.timezone import now, timedelta
 from uprofile.models import History, SearchHistory
+from predict.models import UserReadRecord
 from .models import *
 from .serializers import *
 import django_filters
 from .utils import PostFilter
 
+def save_user_read_record(user, post):
+    try:
+        read_record = UserReadRecord(user=user, post=post)
+        read_record.save()
+    except Exception as e:
+        pass 
+    
 class PostAPIView(APIView):
     permission_classes = [IsAuthenticated]
     def get(self, request):
@@ -20,7 +28,6 @@ class PostAPIView(APIView):
         serializer = PostSerializer(posts, many=True)
         return Response(serializer.data)
 
-        
 class UpvotePostAPIView(APIView):
     def post(self, request, post_id):
         post = get_object_or_404(Post, pk=post_id)
@@ -53,8 +60,14 @@ class UpvotePostAPIView(APIView):
             post.update_vote_counts()
             user_upvoted = True
             remove_downvote = False
+
+            # save voting history 
             history = History(user=user, post=post, interaction_type='upvote')
             history.save()
+
+            # save that post on read record
+        save_user_read_record(user, post)
+                
 
         response_data = {
             'message': 'Upvote removed successfully' if not user_upvoted else 'Upvoted successfully',
@@ -100,6 +113,8 @@ class DownvotePostAPIView(APIView):
             history = History(user=user, post=post, interaction_type='downvote')
             history.save()
 
+        save_user_read_record(user, post)
+        
         response_data = {
             'message': 'Downvote removed successfully' if not user_downvoted else 'Downvoted successfully',
             'downvote_count': post.downvote_count,

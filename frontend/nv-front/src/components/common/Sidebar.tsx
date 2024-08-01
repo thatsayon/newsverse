@@ -37,7 +37,7 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
   const [expanded, setExpanded] = useState<boolean>(false);
   const pathname = usePathname();
   const [userToken, setUserToken] = useState<string | undefined>(undefined);
-  const [customizeModelOpen, setCustomizeModelOpen] = useState<boolean>(true);
+  const [customizeModelOpen, setCustomizeModelOpen] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   useEffect(() => {

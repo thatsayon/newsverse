@@ -5,6 +5,8 @@ import Cookies from "js-cookie";
 import { Post } from "@/types/postType";
 import Card from "@/components/common/Card";
 import { useInView } from "react-intersection-observer";
+import LCard from "@/components/common/LIstCard";
+import Load from "@/components/common/Loading";
 
 interface ApiResponse {
   count: number;
@@ -19,6 +21,7 @@ export default function MostUpvoted() {
   const [error, setError] = useState<Error | null>(null);
   const [page, setPage] = useState<number>(1);
   const [hasMore, setHasMore] = useState<boolean>(true);
+  const [layout, setLayout] = useState<String>("");
 
   const { ref, inView } = useInView();
   const userToken = Cookies.get("token");
@@ -57,16 +60,43 @@ export default function MostUpvoted() {
     }
   }, [inView, hasMore, isLoading]);
 
-  if (isLoading && page === 1) return <div>Loading...</div>;
+  const checkLayout = () => {
+    try {
+      const layout = (JSON.parse(localStorage.getItem('local:customize') || '{}') as { layout?: string }).layout || 'No layout information found.'
+      if (layout) {
+        setLayout(layout)
+      }
+    } catch (error) {
+      throw error as Error;
+    }
+  }
+
+  useEffect(() => {
+    checkLayout();
+  }, [])
+  if (isLoading && page === 1) return <Load />;
   if (error) return <div>Error: {error.message}</div>;
 
   return (
     <>
-      <div className="grid lg:grid-cols-5 md:grid-cols-2 m-8 gap-6">
-        {posts.map((data) => (
-          <Card key={data.id} post_data={data} />
-        ))}
-      </div>
+      {
+        layout === "grid"
+          ? (
+            <div className="grid lg:grid-cols-5 md:grid-cols-2 m-8 gap-6">
+              {posts.map((data) => (
+                <Card key={data.id} post_data={data} />
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-rows-1 gap-6 m-8 w-4/6 mx-auto">
+              {posts.map((data) => (
+                <div className="">
+                  <LCard key={data.id} post_data={data} />
+                </div>
+              ))}
+            </div>
+          )
+      }
       <div className="flex my-4 justify-center" ref={ref}>
         {isLoading && page > 1 && (
           <svg

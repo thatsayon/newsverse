@@ -16,6 +16,7 @@ from django.utils.encoding import force_bytes
 from django.shortcuts import redirect
 from django.db import transaction
 from datetime import datetime
+import json
 from .serializers import *
 from .tokenlogin import *
 
@@ -132,7 +133,8 @@ class UserLoginAPIView(APIView):
                 email.attach_alternative(email_body, "text/html")
                 email.send()
 
-                return Response({'token': token.key, 'expires_in': expires_in(token), })
+                user_info = UserInfoSerializer(user).data
+                return Response({'token': token.key, 'expires_in': expires_in(token), 'user_info': user_info})
             else:
                 return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

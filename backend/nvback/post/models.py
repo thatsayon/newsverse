@@ -78,3 +78,14 @@ class Vote(models.Model):
 
         super().save(*args, **kwargs)
         self.post.update_vote_counts()
+
+class Creator(models.Model):
+    name = models.CharField(max_length=255, unique=True, verbose_name="Creator Name")
+    website_link = models.URLField(unique=True, verbose_name="Creator Website Link")
+
+    class Meta:
+        verbose_name = "Creator"
+        verbose_name_plural = "Creators"
+
+    def __str__(self):
+        return self.name

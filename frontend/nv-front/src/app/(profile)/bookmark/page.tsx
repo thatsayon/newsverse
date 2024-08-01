@@ -7,6 +7,7 @@ import withAuth from "@/components/modules/auth/withAuth"; // Check import path
 import useFetch from "@/hooks/useFetch";
 import Cookies from "js-cookie";
 import Card from "@/components/common/Card";
+import Load from "@/components/common/Loading";
 
 interface Bookmark {
   content: string;
@@ -63,7 +64,7 @@ const Bookmark: React.FC = () => {
     fetchData();
   }, [axiosFetch, userToken]);
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <Load />;
   if (error) return <div>Error: {error.message}</div>;
   return (
     <>

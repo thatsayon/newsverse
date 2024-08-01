@@ -17,6 +17,10 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 
+// menu imports 
+import { Menu, MenuItem } from "@mui/material";
+import Load from "@/components/common/Loading";
+
 interface ApiResponse {
   count: number;
   next: string | null;
@@ -40,9 +44,18 @@ export default function HistoryPage() {
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [view, setView] = useState<"activity" | "search">("activity");
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const { ref, inView } = useInView();
   const userToken = Cookies.get("token");
+
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
+  };
+
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
 
   const fetchPosts = async (page: number) => {
     setIsLoading(true);
@@ -59,7 +72,9 @@ export default function HistoryPage() {
       const data: ApiResponse = await response.json();
       if (response.ok) {
         setHistory((prevHistory) => [...prevHistory, ...data.results]);
-        setHasMore(data.next !== null);
+        setHasMore(data.next !== null && data.results.length > 0);
+      } else {
+        setHasMore(false);
       }
     } catch (error) {
       setError(error as Error);
@@ -92,10 +107,10 @@ export default function HistoryPage() {
   };
 
   useEffect(() => {
-    if (view === "activity" && history.length === 0) {
+    if (view === "activity" && history.length === 0 && hasMore && !isLoading) {
       fetchPosts(page);
     }
-  }, [page, view, history.length]);
+  }, [page, view, history.length, hasMore, isLoading]);
 
   useEffect(() => {
     if (inView && hasMore && !isLoading && view === "activity") {
@@ -122,6 +137,7 @@ export default function HistoryPage() {
       );
       if (response.ok) {
         setHistory([]);
+        setHasMore(false);
       }
     } catch (error) {
       setError(error as Error);
@@ -186,7 +202,7 @@ export default function HistoryPage() {
     setHasMore(false);
   };
 
-  if (isLoading && page === 1) return <div>Loading...</div>;
+  if (isLoading && page === 1) return <Load />;
   if (error) return <div>Error: {error.message}</div>;
 
   return (
@@ -194,21 +210,19 @@ export default function HistoryPage() {
       <div className="max-w-screen-xl border-x-2 border-slate-800 h-full w-[40%] m-auto py-2 shadow-lg flex flex-col">
         <div className="flex space-x-4 border-b-2 px-4 py-2 border-slate-800">
           <div
-            className={`${
-              view === "activity"
-                ? "bg-main-one text-black"
-                : "bg-nav-dark text-white"
-            } p-2 rounded-lg font-semibold select-none cursor-pointer`}
+            className={`${view === "activity"
+              ? "bg-main-one text-black"
+              : "bg-nav-dark text-white"
+              } p-2 rounded-lg font-semibold select-none cursor-pointer`}
             onClick={switchToActivity}
           >
             Activity History
           </div>
           <div
-            className={`${
-              view === "search"
-                ? "bg-main-one text-black"
-                : "bg-nav-dark text-white"
-            } p-2 rounded-lg font-semibold select-none cursor-pointer`}
+            className={`${view === "search"
+              ? "bg-main-one text-black"
+              : "bg-nav-dark text-white"
+              } p-2 rounded-lg font-semibold select-none cursor-pointer`}
             onClick={switchToSearch}
           >
             Search History
@@ -217,12 +231,82 @@ export default function HistoryPage() {
 
         <div className="mt-4 flex items-center justify-between">
           <div
-            className={`bg-nav-dark p-2 mx-4 rounded-lg cursor-pointer inline-block ${
-              view === "activity" ? "" : "invisible pointer-events-none"
-            }`}
+            className={`bg-nav-dark p-2 mx-4 rounded-lg cursor-pointer inline-block ${view === "activity" ? "" : "invisible pointer-events-none"
+              }`}
+            onClick={handleClick}
           >
             <FaRegListAlt className="text-2xl" />
           </div>
+
+          <Menu
+            id="basic-menu"
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleCloseMenu}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "right",
+            }}
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "left",
+            }}
+            sx={{
+              ".MuiPaper-root": {
+                backgroundColor: "#333",
+                color: "white",
+                minWidth: "200px",
+                boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                borderRadius: "8px",
+                marginTop: ".3rem",
+              },
+            }}
+          >
+            <MenuItem
+              onClick={handleCloseMenu}
+              sx={{ ":hover": { backgroundColor: "#444" } }}
+            >
+              <div className="flex items-center">
+                <p className="font-semibold">All</p>
+              </div>
+            </MenuItem>
+
+            <MenuItem
+              onClick={handleCloseMenu}
+              sx={{ ":hover": { backgroundColor: "#444" } }}
+            >
+              <div className="flex items-center">
+                <p className="font-semibold">Up Votes</p>
+              </div>
+            </MenuItem>
+
+            <MenuItem
+              onClick={handleCloseMenu}
+              sx={{ ":hover": { backgroundColor: "#444" } }}
+            >
+              <div className="flex items-center">
+                <p className="font-semibold">Down Votes</p>
+              </div>
+            </MenuItem>
+
+            <MenuItem
+              onClick={handleCloseMenu}
+              sx={{ ":hover": { backgroundColor: "#444" } }}
+            >
+              <div className="flex items-center">
+                <p className="font-semibold">Read</p>
+              </div>
+            </MenuItem>
+
+            <MenuItem
+              onClick={handleCloseMenu}
+              sx={{ ":hover": { backgroundColor: "#444" } }}
+            >
+              <div className="flex items-center">
+                <p className="font-semibold">Share</p>
+              </div>
+            </MenuItem>
+          </Menu>
 
           <div
             className="flex bg-nav-dark p-2 mx-4 rounded-lg cursor-pointer items-center"
@@ -258,7 +342,7 @@ export default function HistoryPage() {
             )
           ) : searchHistory.length > 0 ? (
             searchHistory.map((data: SearchHistory, index: number) => (
-              <SearchHistoryCard key={index} data={data} onDelete={handleSearchDelete}/>
+              <SearchHistoryCard key={index} data={data} onDelete={handleSearchDelete} />
             ))
           ) : (
             <h1 className="text-center text-2xl text-gray-300">

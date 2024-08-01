@@ -122,3 +122,8 @@ class EmailUpdateSerializer(serializers.Serializer):
 
 class UsernameExistorNotSerializer(serializers.Serializer):
     username = serializers.CharField(max_length=120)
+
+class UserInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User 
+        fields = ['email', 'username', 'full_name', 'date_of_birth', 'gender']

@@ -9,4 +9,5 @@ urlpatterns = [
     path('search-history/', SearchHistoryAPIView.as_view(), name="search-history"),
     path('search-history/<int:search_history_id>/', SearchHistoryDeleteAPIView.as_view(), name="search-history-delete"),
     path('customize/', CustomizeAPIView.as_view(), name='customize-detail'),
+    path('<str:username>/', ProfileAPIView.as_view(), name='profile'),
 ]

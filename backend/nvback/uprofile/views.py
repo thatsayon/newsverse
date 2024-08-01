@@ -2,13 +2,17 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.pagination import PageNumberPagination
-from rest_framework import status
+from rest_framework.exceptions import NotFound
+from rest_framework import status, generics
 from django.shortcuts import get_object_or_404
+from django.contrib.auth import get_user_model
 from .models import *
 from .serializers import *
 from post.models import Post
 from post.serializers import PostSerializer
 from predict.models import UserInfo
+
+User = get_user_model()
 
 class BookmarkPostAPIView(APIView):
     permission_classes = [IsAuthenticated]
@@ -147,3 +151,31 @@ class CustomizeAPIView(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class ProfileAPIView(generics.RetrieveAPIView):
+    serializer_class = ProfileSerializer
+    lookup_field = 'username'
+
+    def get_object(self):
+        username = self.kwargs.get(self.lookup_field)
+        try:
+            return User.objects.get(username=username)
+        except User.DoesNotExist:
+            raise NotFound(f"Profile with username '{username}' not found")
+
+
+         
+# from django.shortcuts import get_object_or_404
+
+# def view_profile(request, username):
+#     user_profile = get_object_or_404(Profile, user__username=username)
+#     if request.user.is_authenticated:
+#         user_profile.increment_profile_views(request.user)
+
+# def view_profile(request, username):
+#     user_profile = get_object_or_404(Profile, user__username=username)
+#     if not user_profile.is_public and request.user != user_profile.user:
+#         return HttpResponseForbidden("This profile is private.")
+#     if request.user.is_authenticated:
+#         user_profile.increment_profile_views(request.user)
+#         user_profile.increment_reading_streak()
