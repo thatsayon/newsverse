@@ -1,5 +1,5 @@
 from pathlib import Path
-import os 
+import os
 import dj_database_url
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -54,7 +54,9 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000"
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://192.168.0.192:3000"
 ]
 
 CSRF_TRUSTED_ORIGINS = [
@@ -97,7 +99,7 @@ WSGI_APPLICATION = 'core.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'newsverse',
+        'NAME': 'nvnew',
         'USER': 'ayon',
         'PASSWORD': 'amiayon',
         'HOST': 'localhost',
@@ -109,7 +111,7 @@ DATABASES = {
 #     'default': dj_database_url.config(
 #         # Replace this value with your local database's connection string.
 #         # default='postgresql://postgres:postgres@localhost:5432/mysite',
-#         default='postgres://nv_db_user:w9nXqPD9KYWXkiNb5MsP4K5PfZULAJI8@dpg-cpgov8cf7o1s738iq2gg-a.singapore-postgres.render.com/nv_db', 
+#         default='postgres://nv_db_user:w9nXqPD9KYWXkiNb5MsP4K5PfZULAJI8@dpg-cpgov8cf7o1s738iq2gg-a.singapore-postgres.render.com/nv_db',
 #         conn_max_age=600
 #     )
 # }
@@ -176,9 +178,9 @@ REST_FRAMEWORK = {
 # email configuration
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'mail.techview71.com'
-EMAIL_HOST_USER = 'no-reply@sahityojogot.com'  
+EMAIL_HOST_USER = 'ayon@midgeneration.com'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-EMAIL_HOST_PASSWORD = 'sahityo@jogot2024'
+EMAIL_HOST_PASSWORD = '1fjw0676Ayon'
 EMAIL_PORT = 465
 EMAIL_USE_SSL = True
 EMAIL_USE_TLS = False

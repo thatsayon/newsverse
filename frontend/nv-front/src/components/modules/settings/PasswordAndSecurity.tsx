@@ -17,7 +17,7 @@ export default function PAndS() {
     return (
         <>
             <div className="pt-3 border-l-2 border-slate-800">
-                <div className="border-b-2 border-slate-800">
+                <div className="border-b-2-3 border-slate-800">
                     <h1 className="pl-4 pb-3 text-2xl font-semibold">Password & Security</h1>
                 </div>
 

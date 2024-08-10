@@ -102,6 +102,17 @@ section .signin .content .form .inputBox {
   width: 100%;
 }
 
+section .signin .content .form .inputBox .password-icon {
+  position: absolute;
+  right: 10px; /* Align icon to the right */
+  top: 50%; /* Vertically center the icon */
+  transform: translateY(-50%);
+  color: #aaa; /* Grey color for the icon */
+  font-size: 1.5em; /* Adjust the size of the icon */
+  cursor: pointer; /* Change cursor to pointer to indicate interactivity */
+  transition: color 0.3s ease; /* Smooth color transition */
+}
+
 section .signin .content .form .inputBox input {
   position: relative;
   width: 100%;

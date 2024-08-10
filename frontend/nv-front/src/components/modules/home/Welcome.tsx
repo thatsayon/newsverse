@@ -34,25 +34,25 @@ export default function WelcomeHome() {
   }, []);
   return (
     <>
-      <div className="flex relative" style={{ height: "75vh" }}>
+      <div className="flex relative h-[60vh] md:h-[75vh] lg:h-[75vh] sm:h-[60vh]">
         <h1
           style={oswald.style}
-          className="text-8xl px-14 flex-1 place-content-center"
+          className="md:text-8xl text-5xl md:px-14 px-6 flex-1 place-content-center"
         >
           Explore the latest updates <br />
           in the{" "}
-          <span className="text-main-one font-semibold cursor-pointer hover-on-span hover:text-main-one-deep">
+          <span className="text-main-one md:font-semibold font-bold cursor-pointer hover-on-span hover:text-main-one-deep">
             news
           </span>{" "}
           with insightful <br />
           commentary in our{" "}
-          <span className="text-main-one font-semibold hover:text-main-one-deep cursor-pointer">
+          <span className="text-main-one md:font-semibold font-bold hover:text-main-one-deep cursor-pointer">
             verse
           </span>
           .
         </h1>
         <h2
-          className="absolute top-16 right-12 text-2xl text-center border-2 p-4 rounded-full"
+          className="hidden md:inline-block absolute md:top-16 top-4 md:right-12 right-4 md:text-2xl text-xl text-center border-2 md:p-4 p-3 rounded-full"
           style={oswald.style}
         >
           All your news <br />
@@ -91,7 +91,7 @@ export default function WelcomeHome() {
           className="text-center inline-block cursor-pointer"
         >
           <p
-            className="bg-white text-black px-2 text-xl font-bold py-1 dancing"
+            className="bg-white text-black px-2 text-xl font-bold py-1 dancing rounded-lg"
             style={lilita.style}
           >
             ?
@@ -106,8 +106,8 @@ export default function WelcomeHome() {
           className="flex justify-center items-center h-full"
         >
           <div className="">
-            <p className="text-6xl mb-8 text-center" style={oswald.style}>
-              Finding reliable <span className="text-main-one">news</span> is
+            <p className="px-2 text-5xl md:text-6xl mb-8 text-center" style={oswald.style}>
+              Finding reliable <span className="text-main-one font-bold md:font-semibold">news</span> is
               like searching for a needle in a haystack of source.
             </p>
             <div className="flex justify-center">
@@ -118,7 +118,7 @@ export default function WelcomeHome() {
                 className="text-center inline-block cursor-pointer"
               >
                 <p
-                  className="bg-white text-black px-2 text-xl font-bold py-1 dancing"
+                  className="bg-white text-black px-2 text-xl font-bold py-1 dancing rounded-lg"
                   style={lilita.style}
                 >
                   Need a solution ?
@@ -144,7 +144,7 @@ export default function WelcomeHome() {
           <div className="">
             <p className="text-6xl mb-8 text-center" style={oswald.style}>
               Finding Reliable News Just Got Easier with{" "}
-              <span className="text-main-one">News Verse</span>.
+              <span className="text-main-one md:font-semibold font-bold">News Verse</span>.
             </p>
             <div className="flex justify-center">
               <Link
@@ -154,7 +154,7 @@ export default function WelcomeHome() {
                 className="text-center inline-block cursor-pointer"
               >
                 <p
-                  className="bg-white text-black px-2 text-xl font-bold py-1 dancing"
+                  className="bg-white text-black px-2 text-xl font-bold py-1 dancing rounded-lg"
                   style={lilita.style}
                 >
                   But how ?
@@ -180,18 +180,18 @@ export default function WelcomeHome() {
           <div className="">
             <p className="text-5xl mb-8 text-center" style={oswald.style}>
               With our advanced algorithm,{" "}
-              <span className="text-main-one">News Verse</span> finds the news
+              <span className="text-main-one font-bold md:font-semibold">News Verse</span> finds the news
               you need from the entire web.
             </p>
             <div className="flex justify-center">
-              <NavLink href="/signup">
+              <a href="/signup">
                 <p
-                  className="bg-white text-black px-2 text-xl font-bold py-1 dancing"
+                  className="bg-white text-black px-2 text-xl font-bold py-1 dancing mx-8 rounded-lg"
                   style={lilita.style}
                 >
                   Sign up now on News Verse for personalized, reliable news !!!
                 </p>
-              </NavLink>
+              </a>
             </div>
           </div>
         </div>
@@ -201,7 +201,7 @@ export default function WelcomeHome() {
       <div className="flex flex-col items-center mb-4">
         <div className="border-t-8 border-slate-600 w-[10rem] rounded-lg mb-8"></div>
         <div>
-          <p style={oswald.style} className="text-xl">
+          <p style={oswald.style} className="text-lg md:text-xl">
             Contact us at{" "}
             <a href="mailto:contact@newsverse.com" className="text-blue-400">
               contact@newsverse.com

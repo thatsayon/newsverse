@@ -5,6 +5,7 @@ import { login } from "@/utils/loginControl"; // Update with the correct path
 import axios from "axios";
 import { FaHome } from "react-icons/fa";
 import { GrHomeRounded } from "react-icons/gr";
+import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 import "./loginStyle.css";
 
 export default function LoginForm() {
@@ -12,6 +13,11 @@ export default function LoginForm() {
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [trying, setTrying] = useState<boolean>(false);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword((prevState) => !prevState);
+  };
   const router = useRouter();
 
   const handleSubmit = async (event: FormEvent) => {
@@ -75,12 +81,23 @@ export default function LoginForm() {
                 </div>
                 <div className="inputBox">
                   <input
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     value={password}
                     onChange={handlePasswordChange}
                     required
                   />
                   <i>Password</i>
+                  {showPassword ? (
+                    <IoMdEyeOff
+                      className="password-icon"
+                      onClick={togglePasswordVisibility}
+                    />
+                  ) : (
+                    <IoMdEye
+                      className="password-icon"
+                      onClick={togglePasswordVisibility}
+                    />
+                  )}
                 </div>
                 <div className="links">
                   <a href="/recover">Forgotten Password ?</a>

@@ -22,7 +22,7 @@ export const login = async (identifier: string, password: string): Promise<void>
     const payload = isEmail(identifier)
       ? { email: identifier, password }
       : { username: identifier, password };
-
+    console.log(payload)
     const response = await axios.post<LoginResponse>('http://127.0.0.1:8000/auth/login/', payload);
 
     const { token, user_info } = response.data;

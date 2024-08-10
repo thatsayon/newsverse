@@ -6,7 +6,6 @@ import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { MdArrowBackIos } from "react-icons/md";
 import {
   TextField,
   styled,
@@ -231,8 +230,10 @@ export default function NewForm() {
 
   const Step1 = () => {
     const [showPassword, setShowPassword] = useState<boolean>(false); // Controls the visibility of the password
-    const [confirmShowPassword, setConfirmShowPassword] = useState<boolean>(false); 
+    const [confirmShowPassword, setConfirmShowPassword] =
+      useState<boolean>(false); // Controls the visibility of the confirm password
 
+    // Toggle function for password visibility
     const togglePasswordVisibility = () => {
       setShowPassword((prevState) => !prevState);
     };
@@ -843,19 +844,20 @@ export default function NewForm() {
           style={{ boxShadow: "0 15px 35px rgba(0, 0, 0, 0.9)" }}
           className="bg-[#222] lg:w-3/6 w-11/12 lg:px-12 lg:py-10 py-5 px-5"
         >
-          {
-            step !== 4 && (
-              <MdArrowBackIos className={
-                step === 0 
-                  ? "text-2xl cursor-pointer invisible"
-                  : "text-2xl cursor-pointer" 
-              } onClick={prevStep}/>
-            )
-          }
           <div>{steps[step]}</div>
           {step !== 4 && (
             <div className="flex justify-between mt-4">
-              <div></div>
+              <button
+                onClick={prevStep}
+                disabled={step === 0}
+                className={
+                  step === 0
+                    ? "invisible" // Hide button on the first step
+                    : "bg-main-one text-[#222] px-2 py-1 rounded font-semibold select-none"
+                }
+              >
+                Previous
+              </button>
               <button
                 onClick={nextStep}
                 className="bg-main-one text-[#222] font-semibold px-2 py-1 text-xl rounded select-none"

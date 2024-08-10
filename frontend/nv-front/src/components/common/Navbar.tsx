@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import NewsVerse from "@/../public/news verse.png";
 import Cookies from "js-cookie";
-import { FaSearch } from "react-icons/fa";
+import { FaSearch, FaBars } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 
 // menu needed imports 
@@ -18,20 +18,30 @@ import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
 import Tooltip from '@mui/material/Tooltip';
 import PersonAdd from '@mui/icons-material/PersonAdd';
 import LockPerson from '@mui/icons-material/LockPerson'
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
+import Drawer from '@mui/material/Drawer';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+
+// icons
+import { IoClose, IoHome } from "react-icons/io5";
+import { IoHomeOutline } from "react-icons/io5";
+import { BiUpvote } from "react-icons/bi";
+import { AiOutlineFire } from "react-icons/ai";
+import { FaRegBookmark } from "react-icons/fa";
+import { RiHistoryFill } from "react-icons/ri";
 
 const darkTheme = createTheme({
   palette: {
     mode: 'dark',
   },
 });
-
 
 export default function NavBar(token: any) {
   const pathname = usePathname();
@@ -43,6 +53,8 @@ export default function NavBar(token: any) {
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [avatarContent, setAvatarContent] = useState<string>("A");
+
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   const open = Boolean(anchorEl);
 
@@ -73,15 +85,18 @@ export default function NavBar(token: any) {
     }
   };
 
-  if (hideNavBarOnPages.includes(pathname)) {
-    return null;
-  }
-
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const toggleDrawer = (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
+    if (event.type === 'keydown' && ((event as React.KeyboardEvent).key === 'Tab' || (event as React.KeyboardEvent).key === 'Shift')) {
+      return;
+    }
+    setDrawerOpen(open);
   };
 
   useEffect(() => {
@@ -99,11 +114,60 @@ export default function NavBar(token: any) {
     }
   }, []);
 
+  if (hideNavBarOnPages.includes(pathname)) {
+    return null;
+  }
+
+  const list = () => (
+    <Box
+      sx={{
+        width: '60vw',
+        bgcolor: 'black',
+        color: 'white',
+        height: '100vh',
+      }}
+      role="presentation"
+      onClick={toggleDrawer(false)}
+      onKeyDown={toggleDrawer(false)}
+    >
+      <div className="flex justify-end m-3 cursor-pointer">
+        <IoClose className="text-2xl" />
+      </div>
+      <List>
+        {[
+          { 'name': 'My Feed', 'destination': '/', 'icon': <IoHomeOutline /> },
+          { 'name': 'Popular', 'destination': '/popular', 'icon': <AiOutlineFire /> },
+          { 'name': 'Most Upvoted', 'destination': '/most-upvoted', 'icon': <BiUpvote /> },
+          { 'name': 'Bookmarks', 'destination': '/bookmark', 'icon': <FaRegBookmark />},
+          { 'name': 'History', 'destination': '/history', 'icon': <RiHistoryFill/> },
+        ].map((val, key) => (
+          <Link href={val.destination}>
+            <ListItem button key={key} sx={{ color: 'white' }}>
+              <div className="flex items-center">
+                <div className="text-xl mr-6">{val.icon}</div>
+                <ListItemText primary={<span className="text-xl font-semibold">{val.name}</span>} />
+              </div>
+            </ListItem>
+          </Link>
+        ))}
+      </List>
+    </Box>
+  );
 
   return (
     <>
       <nav className="flex justify-between py-2 bg-[#121213] rounded-b border-b-2 border-slate-800 overflow-hidden">
-        <NavLink href="/">
+        {/* Hamburger menu on mobile/tablet screens for logged-in users */}
+        {!!token.token && (
+          <div className="ml-3 block my-auto lg:hidden">
+            <FaBars className="text-white cursor-pointer text-2xl" onClick={toggleDrawer(true)} />
+            <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer(false)}>
+              {list()}
+            </Drawer>
+          </div>
+        )}
+
+        <NavLink href="/" className="my-auto">
           <div>
             <Image
               src={NewsVerse}
@@ -116,7 +180,7 @@ export default function NavBar(token: any) {
         </NavLink>
 
         {!!token.token ? (
-          <div>
+          <div className="hidden lg:flex">
             <div className="flex items-center border-2 px-2 border-slate-800 rounded-lg">
               <FaSearch
                 className="mr-2 cursor-pointer"
@@ -137,16 +201,10 @@ export default function NavBar(token: any) {
         ) : (
           <></>
         )}
+
         <div>
           {!!token.token ? (
             <>
-              {/* <div
-                onClick={handleLogout}
-                className="text-black font-bold bg-main-one px-4 py-1.5 rounded mx-2 text-xl cursor-pointer"
-              >
-                <p>Logout</p>
-              </div> */}
-
               <div className="mr-6">
                 <ThemeProvider theme={darkTheme}>
                   <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
@@ -235,18 +293,16 @@ export default function NavBar(token: any) {
                     </MenuItem>
                   </Menu>
                 </ThemeProvider>
-
               </div>
             </>
           ) : (
             <>
-              <NavLink href="/login" className="font-semibold">
+              {/* Login button on desktop screens */}
+              <a href={"/login"} className="font-semibold hidden md:block">
                 <div className="text-black bg-main-one px-4 py-1.5 rounded mx-2 text-xl">
-                  <p>
-                    Login
-                  </p>
+                  <p>Login</p>
                 </div>
-              </NavLink>
+              </a>
             </>
           )}
         </div>
