@@ -100,6 +100,16 @@ class PredictedPost(APIView, PageNumberPagination):
                 response.status_code = status.HTTP_200_OK
                 return response
             else:
-                return Response({"error": "No posts found for this user"}, status=status.HTTP_404_NOT_FOUND)
+                seven_days_ago = timezone.now() - timezone.timedelta(days=7)
+                recent_posts = Post.objects.filter(created_at__gte=seven_days_ago)
+                posts = recent_posts.order_by('-upvote_count')
+                if posts.exists():
+                    result = self.paginate_queryset(posts, request, view=self)
+                    serializer = PostSerializer(result, many=True, context={'request': request})
+                    response = self.get_paginated_response(serializer.data)
+                    response.status_code = status.HTTP_200_OK
+                    return response
+                else:
+                    return Response({"error": "No posts found for this user"}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

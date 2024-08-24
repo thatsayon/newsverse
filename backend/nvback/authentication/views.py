@@ -30,7 +30,8 @@ class UserRegistrationAPIView(generics.CreateAPIView):
                 user = serializer.save()
                 token = default_token_generator.make_token(user)
                 uid = urlsafe_base64_encode(force_bytes(user.pk))
-                confirm_link = f"http://127.0.0.1:8000/auth/active/{uid}/{token}/"
+
+                confirm_link = f"{request.scheme}://{request.get_host()}/auth/active/{uid}/{token}/"
 
 
                 try:
