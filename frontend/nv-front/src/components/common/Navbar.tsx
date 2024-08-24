@@ -36,6 +36,7 @@ import { BiUpvote } from "react-icons/bi";
 import { AiOutlineFire } from "react-icons/ai";
 import { FaRegBookmark } from "react-icons/fa";
 import { RiHistoryFill } from "react-icons/ri";
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 const darkTheme = createTheme({
   palette: {
@@ -55,9 +56,16 @@ export default function NavBar(token: any) {
   const [avatarContent, setAvatarContent] = useState<string>("A");
 
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const userToken = Cookies.get('token');
 
   const open = Boolean(anchorEl);
+  const isMobileOrTablet = useMediaQuery('(max-width: 1024px)');
 
+  const handleSettingsClick = () => {
+    const href = isMobileOrTablet ? '/setting' : '/setting/personal-detail';
+    router.push(href);
+    handleClose(); // Close the menu if needed
+  };
   const handleLogout = () => {
     Cookies.remove("token");
     window.location.href = "/";
@@ -118,6 +126,38 @@ export default function NavBar(token: any) {
     return null;
   }
 
+  const goProfile = async () => {
+    try {
+      let username = JSON.parse(localStorage.getItem("local:boot") || "{}")?.user?.username;
+
+      if (!username) {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/get-username/`, {
+          method: 'GET',
+          headers: {
+            Authorization: `Token ${userToken}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch username');
+        }
+
+        const data = await response.json();
+        username = data?.username;
+      }
+
+      if (username) {
+        router.push(`/${username}`);
+      } else {
+        throw new Error('Username not found');
+      }
+    } catch (error) {
+      console.log("Unable to get username, redirecting to login...");
+      localStorage.removeItem("local:boot");
+      router.push('/login');
+    }
+  };
+
   const list = () => (
     <Box
       sx={{
@@ -138,8 +178,8 @@ export default function NavBar(token: any) {
           { 'name': 'My Feed', 'destination': '/', 'icon': <IoHomeOutline /> },
           { 'name': 'Popular', 'destination': '/popular', 'icon': <AiOutlineFire /> },
           { 'name': 'Most Upvoted', 'destination': '/most-upvoted', 'icon': <BiUpvote /> },
-          { 'name': 'Bookmarks', 'destination': '/bookmark', 'icon': <FaRegBookmark />},
-          { 'name': 'History', 'destination': '/history', 'icon': <RiHistoryFill/> },
+          { 'name': 'Bookmarks', 'destination': '/bookmark', 'icon': <FaRegBookmark /> },
+          { 'name': 'History', 'destination': '/history', 'icon': <RiHistoryFill /> },
         ].map((val, key) => (
           <Link href={val.destination}>
             <ListItem button key={key} sx={{ color: 'white' }}>
@@ -263,21 +303,19 @@ export default function NavBar(token: any) {
                     transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                     anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                   >
-                    <MenuItem onClick={handleClose}>
+                    <MenuItem onClick={goProfile}>
                       <ListItemIcon>
                         <AccountCircle fontSize="small" />
                       </ListItemIcon>
                       Profile
                     </MenuItem>
 
-                    <Link href="/setting/personal-detail">
-                      <MenuItem onClick={handleClose}>
-                        <ListItemIcon>
-                          <Settings fontSize="small" />
-                        </ListItemIcon>
-                        Settings
-                      </MenuItem>
-                    </Link>
+                    <MenuItem onClick={handleSettingsClick}>
+                      <ListItemIcon>
+                        <Settings fontSize="small" />
+                      </ListItemIcon>
+                      Settings
+                    </MenuItem>
 
                     <MenuItem onClick={handleClose}>
                       <ListItemIcon>
@@ -298,7 +336,7 @@ export default function NavBar(token: any) {
           ) : (
             <>
               {/* Login button on desktop screens */}
-              <a href={"/login"} className="font-semibold hidden md:block">
+              <a href={"/login"} className="font-semibold">
                 <div className="text-black bg-main-one px-4 py-1.5 rounded mx-2 text-xl">
                   <p>Login</p>
                 </div>

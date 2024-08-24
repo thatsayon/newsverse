@@ -1,7 +1,7 @@
 "use client";
 import { useForm, Controller } from "react-hook-form";
 import "./signupStyle.css";
-import { useState, useMemo, useEffect, useRef } from "react";
+import { useState, useMemo, useEffect, useRef, memo } from "react";
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -88,6 +88,7 @@ export default function NewForm() {
   const [emailNotExist, setEmailNotExist] = useState(false);
   const [usernameNotExist, setUsernameNotExist] = useState(false);
   const [passStrong, setPassStrong] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const [err, setErr] = useState(false);
   const [showLanguageWarning, setShowLanguageWarning] = useState(false);
   const [emailWarning, setEmailWarning] = useState("");
@@ -108,19 +109,19 @@ export default function NewForm() {
     mode: "onChange",
   });
 
-  const handleTopicClick = (topic: string) => {
-    setSelectedTopics((prevSelectedTopics) => {
-      const newTopics = prevSelectedTopics.includes(topic)
-        ? prevSelectedTopics.filter((t) => t !== topic)
-        : [...prevSelectedTopics, topic];
-      return newTopics;
-    });
-  };
+  // const handleTopicClick = (topic: string) => {
+  //   setSelectedTopics((prevSelectedTopics) => {
+  //     const newTopics = prevSelectedTopics.includes(topic)
+  //       ? prevSelectedTopics.filter((t) => t !== topic)
+  //       : [...prevSelectedTopics, topic];
+  //     return newTopics;
+  //   });
+  // };
 
   const checkEmail = async (event: React.FocusEvent<HTMLInputElement>) => {
     const inputValue = event.target.value;
     try {
-      const response = await fetch("http://127.0.0.1:8000/auth/check-email/", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/check-email/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -154,7 +155,7 @@ export default function NewForm() {
 
     try {
       const response = await fetch(
-        "http://127.0.0.1:8000/auth/check-username/",
+        `${process.env.NEXT_PUBLIC_BASE_URL}/auth/check-username/`,
         {
           method: "POST",
           headers: {
@@ -231,7 +232,7 @@ export default function NewForm() {
 
   const Step1 = () => {
     const [showPassword, setShowPassword] = useState<boolean>(false); // Controls the visibility of the password
-    const [confirmShowPassword, setConfirmShowPassword] = useState<boolean>(false); 
+    const [confirmShowPassword, setConfirmShowPassword] = useState<boolean>(false);
 
     const togglePasswordVisibility = () => {
       setShowPassword((prevState) => !prevState);
@@ -500,14 +501,8 @@ export default function NewForm() {
       setValue("lang", selectedLanguages);
       const [country, language] = watch(["country", "language"]);
       setCountry(country);
-
-      // if(language[0]){
-      //   setEnSelect(true);
-      // }
-      // if(language[1]){
-      //   setBnSelect(true);
-      // }
     }, [enSelect, bnSelect, setValue, showWarning]);
+
     return (
       <div>
         <h2 className="text-center py-2 text-2xl uppercase font-semibold">
@@ -578,11 +573,10 @@ export default function NewForm() {
               render={({ field }) => (
                 <div className="grid grid-cols-2 gap-4">
                   <div
-                    className={`${
-                      enSelect
-                        ? "langField bg-main-one text-black"
-                        : "langField bg-[#323332] text-white"
-                    }`}
+                    className={`${enSelect
+                      ? "langField bg-main-one text-black"
+                      : "langField bg-[#323332] text-white"
+                      }`}
                     onClick={() => setEnSelect(!enSelect)}
                   >
                     <p className="uppercase text-center text-lg font-semibold select-none">
@@ -590,11 +584,10 @@ export default function NewForm() {
                     </p>
                   </div>
                   <div
-                    className={`${
-                      bnSelect
-                        ? "langField bg-main-one text-black"
-                        : "langField bg-[#323332] text-white"
-                    }`}
+                    className={`${bnSelect
+                      ? "langField bg-main-one text-black"
+                      : "langField bg-[#323332] text-white"
+                      }`}
                     onClick={() => setBnSelect(!bnSelect)}
                   >
                     <p className="uppercase text-center text-lg font-semibold select-none">
@@ -615,17 +608,31 @@ export default function NewForm() {
     );
   };
 
-  const Step4 = ({
-    selectedTopics,
-    handleTopicClick,
-  }: {
-    selectedTopics: string[];
-    handleTopicClick: (topic: string) => void;
-  }) => {
+
+  const Step4 = () => {
+    const [topicN, setTopicN] = useState<string[]>(() => {
+      const savedTopics = sessionStorage.getItem('selectedTopics');
+      return savedTopics ? JSON.parse(savedTopics) : [];
+    });
+
     const getTopicButtonClass = (topic: string) => {
-      return selectedTopics.includes(topic)
+      return topicN.includes(topic)
         ? "bg-main-one text-black rounded-lg"
         : "bg-[#131213] text-white rounded-lg";
+    };
+
+    useEffect(() => {
+      // Save selected topics to sessionStorage whenever topicN changes
+      sessionStorage.setItem('selectedTopics', JSON.stringify(topicN));
+      setValue('favourite_topics', topicN);
+    }, [topicN]);
+
+    const handleTopicClick = (topic: string) => {
+      if (!topicN.includes(topic)) {
+        setTopicN([...topicN, topic]);
+      } else {
+        setTopicN(topicN.filter((t) => t !== topic)); // Remove topic if already selected
+      }
     };
 
     return (
@@ -641,14 +648,13 @@ export default function NewForm() {
             flexWrap: "wrap",
             maxHeight: "200px",
             overflowY: "auto",
-            scrollbarWidth: "none",
-            msOverflowStyle: "none",
-            WebkitOverflowScrolling: "touch",
+            WebkitOverflowScrolling: "touch", // Smooth scrolling on iOS
           }}
         >
-          {topics.map((val, index) => (
-            <div
-              key={index}
+          {topics.map((val) => (
+            <button
+              key={val}
+              type="button"
               style={{
                 margin: "5px",
                 cursor: "pointer",
@@ -659,7 +665,7 @@ export default function NewForm() {
               <p className="inline-block rounded-lg px-3 py-2 select-none">
                 {val}
               </p>
-            </div>
+            </button>
           ))}
         </div>
 
@@ -671,6 +677,7 @@ export default function NewForm() {
       </div>
     );
   };
+
 
   const Step5 = () => {
     return (
@@ -684,11 +691,7 @@ export default function NewForm() {
       <Step1 key="step1" />,
       <Step2 key="step2" />,
       <Step3 key="step3" />,
-      <Step4
-        key="step4"
-        selectedTopics={selectedTopics}
-        handleTopicClick={handleTopicClick}
-      />,
+      <Step4 key="step4" />,
       <Step5 key="step5" />,
     ],
     [
@@ -708,37 +711,28 @@ export default function NewForm() {
   );
 
   const signupRequest = async (data: any) => {
-    console.log("bye");
     try {
-      console.log("Submitting form data:", data);
-      // Send a POST request to the backend
-      const response = await fetch("http://127.0.0.1:8000/auth/register/", {
+      setLoading(true);
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/register/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(data), // Send form data as JSON
+        body: JSON.stringify(data), 
       });
 
-      // Check if the response is okay
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
 
-      // Parse the response data
       const result = await response.json();
-      console.log("Server response:", result);
 
-      // Handle successful response
-      // alert("Signup successful!");
       setStep((prevStep) => prevStep + 1);
     } catch (error) {
-      // console.error("Error during form submission:", error);
-      console.log(error);
-      // Handle errors during submission
-      // alert("There was an error during signup. Please try again.");
+      setLoading(false);
     }
   };
+
 
   const nextStep = () => {
     const step1Values = watch([
@@ -810,8 +804,6 @@ export default function NewForm() {
 
       if (!country?.trim() || !region?.trim() || !address?.trim()) {
         const [language] = watch(["language"]);
-
-        console.log(language);
         setShowWarning(true);
       } else if (language.length < 1) {
         setShowLanguageWarning(true);
@@ -822,11 +814,16 @@ export default function NewForm() {
         setStep((prevStep) => prevStep + 1);
       }
     }
-    if (step === 3 && selectedTopics.length < 3) {
-      setShowTopicWarning(true);
-    } else if (step === 3 && selectedTopics.length >= 3) {
-      setShowTopicWarning(false);
-      handleSubmit(signupRequest)();
+
+    if (step === 3) {
+      const ST = sessionStorage.getItem("selectedTopics");
+      const parsedTopic = ST ? JSON.parse(ST) : [];
+      if(parsedTopic.length < 3) {
+        setShowTopicWarning(true);
+      } else if (parsedTopic.length >= 3) {
+        setShowTopicWarning(false);
+        handleSubmit(signupRequest)();
+      }
     }
   };
 
@@ -836,9 +833,15 @@ export default function NewForm() {
     }
   };
 
+  const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      nextStep();
+    }
+  };
+
   return (
     <>
-      <div className="h-screen flex justify-center items-center">
+      <div className="h-screen flex justify-center items-center" onKeyPress={handleKeyPress} tabIndex={0}>
         <div
           style={{ boxShadow: "0 15px 35px rgba(0, 0, 0, 0.9)" }}
           className="bg-[#222] lg:w-3/6 w-11/12 lg:px-12 lg:py-10 py-5 px-5"
@@ -846,10 +849,10 @@ export default function NewForm() {
           {
             step !== 4 && (
               <MdArrowBackIos className={
-                step === 0 
+                step === 0
                   ? "text-2xl cursor-pointer invisible"
-                  : "text-2xl cursor-pointer" 
-              } onClick={prevStep}/>
+                  : "text-2xl cursor-pointer"
+              } onClick={prevStep} />
             )
           }
           <div>{steps[step]}</div>
@@ -858,10 +861,10 @@ export default function NewForm() {
               <div></div>
               <button
                 onClick={nextStep}
-                className="bg-main-one text-[#222] font-semibold px-2 py-1 text-xl rounded select-none"
-                // disabled={showWarning ? true : false}
+                className="bg-main-one text-[#222] font-semibold px-4 py-1 text-2xl rounded select-none"
+              // disabled={showWarning ? true : false}
               >
-                {step === 3 ? "Create Account" : "Next"}
+                {step === 3 ? loading ? "Loading..." : "Create Account" : "Next"}
               </button>
             </div>
           )}

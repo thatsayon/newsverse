@@ -2,6 +2,7 @@
 import React, { useState, ChangeEvent } from "react"
 import { RiLockPasswordLine, RiLockPasswordFill } from "react-icons/ri";
 import { PiLockKeyFill } from "react-icons/pi";
+import { MdKeyboardArrowLeft } from "react-icons/md";
 
 export default function PAndS() {
     const [currentPass, setCurrentPass] = useState<string>('');
@@ -16,9 +17,10 @@ export default function PAndS() {
 
     return (
         <>
-            <div className="pt-3 border-l-2 border-slate-800">
-                <div className="border-b-2-3 border-slate-800">
-                    <h1 className="pl-4 pb-3 text-2xl font-semibold">Password & Security</h1>
+            <div className="pt-3 lg:border-l-2 border-slate-800">
+                <div className="border-b-2 border-slate-800 flex pl-2">
+                    <MdKeyboardArrowLeft className='text-3xl lg:hidden mt-0.5 cursor-pointer' onClick={() => window.history.back()} />
+                    <h1 className="pl-2 pb-3 text-2xl font-semibold">Password & Security</h1>
                 </div>
 
                 <div className="pl-4 pt-2 border-b-2 border-slate-800 pb-4">
@@ -27,7 +29,7 @@ export default function PAndS() {
                     </div>
 
                     <div className="flex flex-col pt-4">
-                        <div className="flex items-center bg-zinc-700 rounded-md py-2 mr-80">
+                        <div className="flex items-center bg-zinc-700 rounded-md py-2 lg:mr-80 mr-4">
                             <RiLockPasswordLine className="text-3xl text-gray-400 mx-3" />
 
                             <div>
@@ -47,7 +49,7 @@ export default function PAndS() {
                     </div>
 
                     <div className="flex flex-col pt-4">
-                        <div className="flex items-center bg-zinc-700 rounded-md py-2 mr-80">
+                        <div className="flex items-center bg-zinc-700 rounded-md py-2 lg:mr-80 mr-4">
                             <RiLockPasswordFill className="text-3xl text-gray-400 mx-3" />
 
                             <div>
@@ -67,7 +69,7 @@ export default function PAndS() {
                     </div>
 
                     <div className="flex flex-col pt-4">
-                        <div className="flex items-center bg-zinc-700 rounded-md py-2 mr-80">
+                        <div className="flex items-center bg-zinc-700 rounded-md py-2 lg:mr-80 mr-4">
                             <PiLockKeyFill className="text-3xl text-gray-400 mx-3" />
 
                             <div>
@@ -86,7 +88,7 @@ export default function PAndS() {
                         </div>
                     </div>
 
-                    <div className="text-right mr-80 mt-4">
+                    <div className="text-right lg:mr-80 mr-4 mt-4">
                         <button className="bg-main-one text-black font-semibold p-2 rounded-lg hover:bg-main-one-deep">Update Password</button>
                     </div>
                 </div>
@@ -96,7 +98,7 @@ export default function PAndS() {
                         <h1 className="text-xl font-semibold">Recover Password</h1>
                     </div>
 
-                    <div className="flex flex-col pt-4">
+                    {/* <div className="flex flex-col pt-4">
                         <div className="flex items-center bg-zinc-700 rounded-md py-2 mr-80">
                             <RiLockPasswordFill className="text-3xl text-gray-400 mx-3" />
 
@@ -114,10 +116,10 @@ export default function PAndS() {
                                 />
                             </div>
                         </div>
-                    </div>
+                    </div> */}
 
-                    <div className="text-right mr-80 mt-4">
-                        <button className="bg-main-one text-black font-semibold p-2 rounded-lg hover:bg-main-one-deep">Send Mail</button>
+                    <div className="text-right items-center justify-center flex mt-4">
+                        <button className="bg-main-one text-black text-xl font-semibold p-3 rounded-lg hover:bg-main-one-deep">Request recover</button>
                     </div>
                 </div>
             </div>

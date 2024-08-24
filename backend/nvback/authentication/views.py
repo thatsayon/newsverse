@@ -235,4 +235,10 @@ class CheckUsernameExistsorNotAPIView(APIView):
                 return Response({"error": "username already exists"}, status=status.HTTP_400_BAD_REQUEST)
             return Response({"detail": "username is available"}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
+class UsernameGetAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
+
+    def get(self, request, *args, **kwargs):
+        return Response({"username": request.user.username})

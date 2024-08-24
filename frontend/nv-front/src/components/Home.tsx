@@ -7,6 +7,7 @@ import Cookies from "js-cookie";
 import { Post as PP } from "@/types/postType";
 import { useInView } from "react-intersection-observer";
 import Load from "./common/Loading";
+import PullToRefresh from 'react-simple-pull-to-refresh';
 
 interface ApiResponse {
   count: number;
@@ -93,11 +94,55 @@ const Home: React.FC = () => {
     return <div>Error: {error.message}</div>;
   }
 
+  const handleRefresh = async () => {
+  try {
+    // Fetch new posts
+    const response = await fetch(
+      `http://127.0.0.1:8000/predict/posts/`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Token ${userToken}`,
+        },
+      }
+    );
+    console.log(response)
+
+    const data: ApiResponse = await response.json();
+
+    if (response.ok && data && Array.isArray(data.results)) {
+      // Clear old posts and update with new data
+      setPosts(data.results);
+      setHasMore(data.next !== null);
+    } else {
+      throw new Error("Unexpected API response format");
+    }
+  } catch (error) {
+    console.error("Refresh failed, shuffling posts...", error);
+
+    // Shuffle the old post list if the fetch fails
+    setPosts((prevPosts) => {
+      const shuffledPosts = [...prevPosts];
+      for (let i = shuffledPosts.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffledPosts[i], shuffledPosts[j]] = [shuffledPosts[j], shuffledPosts[i]];
+      }
+      return shuffledPosts;
+    });
+  }
+};
+
+
   return (
     <>
       {isAuthorized === true ? (
         <div>
-          <Post posts={posts} />
+          <PullToRefresh
+            onRefresh={handleRefresh}
+            pullingContent={<></>}
+          >
+            <Post posts={posts} />
+          </PullToRefresh>
           <div className="flex my-4 justify-center" ref={ref}>
             {isLoading && page > 1 && (
               <svg

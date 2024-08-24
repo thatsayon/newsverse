@@ -44,16 +44,22 @@ const Bookmark: React.FC = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      setIsLoading(true);
       try {
-        const response = await axiosFetch.get<ApiResponse>(
-          "/profile/bookmark/",
-          {
-            headers: {
-              Authorization: `Token ${userToken}`,
-            },
-          }
-        );
-        setPost(response.data);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/profile/bookmark/`, {
+          method: 'GET',
+          headers: {
+            Authorization: `Token ${userToken}`,
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`Failed to fetch: ${response.statusText}`);
+        }
+
+        const data: ApiResponse = await response.json();
+        setPost(data);
       } catch (error) {
         setError(error as Error);
       } finally {
@@ -73,7 +79,7 @@ const Bookmark: React.FC = () => {
           <div className="flex flex-col items-center">
             <FaRegBookmark className="text-6xl opacity-80 mb-3 mt-11" />
             <h1 className="text-3xl mb-3">Your bookmark list is empty.</h1>
-            <p className="text-lg w-4/12 text-center mb-3">
+            <p className="text-lg sm:w-7/12 md:w-8/12 lg:w-4/12 text-center mb-3">
               Go back to your feed and bookmark posts you’d like to keep or read
               later. Each post you bookmark will be stored here.
             </p>

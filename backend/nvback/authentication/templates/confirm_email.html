@@ -45,8 +45,8 @@
 
         .verify-button {
             padding: 0.8rem 2rem; /* Adjusted padding */
-            color: white;
-            background: #fc5d5d;
+            color: black;
+            background: #d7f64e; 
             font-size: 1rem;
             font-weight: 500;
             border-radius: 5px;
@@ -58,7 +58,8 @@
         }
 
         .verify-button:hover {
-            background: #ff7d7d; /* Change color on hover */
+            background: #BDD945; /* Change color on hover */
+            color: black;
         }
 
     </style>
@@ -66,21 +67,22 @@
 <body>
 <div class="container">
     <div class="header">
-        <img src="https://sahityojogot.com/assets/bg-logo-BWbbv1_f.png" alt="sj logo" style="max-width: 150px;" />
-        <h1>আপনার মেইল যাচাই করুন</h1>
+        <img src="https://i.ibb.co/yXJkVbr/news-verse.png" alt="news verse" style="max-width: 150px;" />
+        <h1>Verify Your Email</h1>
         <div>
             <h3>Hello</h3>
             <p>{{ full_name }}</p>
         </div>
     </div>
     <div class="content">
-        <p>বর্তমানে আপনি <span>সাহিত্য জগৎ</span> পরিবারের সদস্য হওয়ার সর্বশেষ স্তরে। আপনি এখন আমাদের সাইটটি ব্যবহার করার জন্য সম্পূর্ণরূপে প্রস্তুত।</p>
+        <p>You are currently at the final step of becoming a member of the <span>News Verse</span> family. You are now fully prepared to use our site.</p>
         <br>
-        <p>তবে তার জন্য আপনার ইমেইলটি Verify করতে হবে। আপনার ইমেইলটি Verify করতে নিচের দেওয়া Verify বাটনে Click করুন। আর আপনি যদি <span>সাহিত্য জগৎ</span> এ কোনো অ্যাকাউন্ট তৈরি করে না থাকেন তাহলে এই মেইলটি এড়িয়ে যান।</p>
+        <p>However, to do so, you need to verify your email. To verify your email, please click the Verify button below. If you have not created an account on <span>News Verse</span>, you can ignore this email.</p>
     </div>
     <br />
     <a href="{{ confirm_link }}" class="verify-button">Verify</a>
 </div>
+
 </body>
 </html>
 

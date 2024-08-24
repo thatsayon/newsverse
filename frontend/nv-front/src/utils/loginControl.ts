@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { setToken } from './tokenControl';
 
 interface UserInfo {
@@ -22,10 +21,22 @@ export const login = async (identifier: string, password: string): Promise<void>
     const payload = isEmail(identifier)
       ? { email: identifier, password }
       : { username: identifier, password };
-    console.log(payload)
-    const response = await axios.post<LoginResponse>('http://127.0.0.1:8000/auth/login/', payload);
 
-    const { token, user_info } = response.data;
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/login/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      throw new Error('Login failed');
+    }
+
+    const data: LoginResponse = await response.json();
+
+    const { token, user_info } = data;
     setToken(token); 
 
     const userData = { user: user_info };

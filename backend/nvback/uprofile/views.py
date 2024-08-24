@@ -152,19 +152,36 @@ class CustomizeAPIView(APIView):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class ProfileAPIView(generics.RetrieveAPIView):
-    serializer_class = ProfileSerializer
-    lookup_field = 'username'
+# class ProfileAPIView(generics.RetrieveAPIView):
+#     serializer_class = ProfileSerializer
+#     lookup_field = 'username'
 
-    def get_object(self):
-        username = self.kwargs.get(self.lookup_field)
+#     def get_object(self):
+#         username = self.kwargs.get(self.lookup_field)
+#         try:
+#             return User.objects.get(username=username)
+#         except User.DoesNotExist:
+#             raise NotFound(f"Profile with username '{username}' not found")
+
+class ProfileAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        username = self.kwargs.get('username')
+        if not username:
+            return Response({"error": "username not provided"}, status=status.HTTP_400_BAD_REQUEST)
+        
         try:
-            return User.objects.get(username=username)
+            user = User.objects.get(username=username)
         except User.DoesNotExist:
-            raise NotFound(f"Profile with username '{username}' not found")
+            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+        if not user.profile.is_public:
+            return Response(PrivateProfileSerializer(user).data)
 
+        serializer = ProfileSerializer(user)
+        return Response(serializer.data)
 
-         
 # from django.shortcuts import get_object_or_404
 
 # def view_profile(request, username):

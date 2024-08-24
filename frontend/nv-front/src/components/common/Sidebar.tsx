@@ -332,7 +332,7 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
         {customizeModelOpen && <Customize onClose={handleCustomizeModelClose} />}
       </div>
 
-      <div className="block lg:hidden fixed bottom-0 bg-nav-dark w-full px-2 py-4 border-t-2 border-slate-800">
+      <div className="block lg:hidden fixed bottom-0 bg-nav-dark w-full px-2 py-4 border-t-2 border-slate-800 z-50">
         <div>
           <ul className="flex justify-around text-2xl">
             <Link href="/"><li><FaHome className={pathname === "/" ? "text-main-one" : ""} /></li></Link>

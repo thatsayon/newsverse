@@ -114,3 +114,23 @@
   font-size: 1em;
   cursor: pointer;
 }
+
+.scrollable-div {
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: #d7f64e #222; 
+}
+
+/* WebKit browsers (Chrome, Safari) */
+.scrollable-div::-webkit-scrollbar {
+  width: 4px;
+}
+
+.scrollable-div::-webkit-scrollbar-thumb {
+  background-color: #d7f64e;
+  border-radius: 7px;
+}
+
+.scrollable-div::-webkit-scrollbar-track {
+  background-color: #222;
+  border-radius: 7px;
+}

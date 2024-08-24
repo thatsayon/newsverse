@@ -4,8 +4,8 @@ import SettingSidebar from "@/components/modules/settings/SettingNav";
 export default function AccountDeletion() {
     return (
         <>
-            <div className="border-r-2 border-slate-800 grid grid-cols-4 w-4/5 m-auto">
-                <div>
+            <div className="lg:border-r-2 border-slate-800 lg:grid lg:grid-cols-4 lg:w-4/5 m-auto">
+                <div className="lg:block hidden">
                     <SettingSidebar />
                 </div>
 

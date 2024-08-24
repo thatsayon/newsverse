@@ -14,7 +14,9 @@ SECRET_KEY = 'django-insecure-f8e1vvd+m$w)5bbz7s$-x%#na*!2^w$$m2ugdr8ltxwk*xqgmp
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '*'
+]
 
 
 # Application definition
@@ -56,11 +58,15 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
-    "http://192.168.0.192:3000"
+    "http://192.168.0.192:3000",
+    "http://0.0.0.0:3000"
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:3000"
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://192.168.0.192:3000",
+    "http://0.0.0.0:3000"
 ]
 
 
@@ -178,7 +184,7 @@ REST_FRAMEWORK = {
 # email configuration
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'mail.techview71.com'
-EMAIL_HOST_USER = 'ayon@midgeneration.com'
+EMAIL_HOST_USER = 'no-reply@techview71.com'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 EMAIL_HOST_PASSWORD = '1fjw0676Ayon'
 EMAIL_PORT = 465

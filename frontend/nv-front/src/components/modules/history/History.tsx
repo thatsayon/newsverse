@@ -207,7 +207,7 @@ export default function HistoryPage() {
 
   return (
     <div className="w-full fixed top-[62px] h-full overflow-hidden left-0 z-40">
-      <div className="max-w-screen-xl border-x-2 border-slate-800 h-full w-[40%] m-auto py-2 shadow-lg flex flex-col">
+      <div className="max-w-screen-xl lg:border-x-2 border-slate-800 h-full lg:w-[40%] m-auto py-2 shadow-lg flex flex-col">
         <div className="flex space-x-4 border-b-2 px-4 py-2 border-slate-800">
           <div
             className={`${view === "activity"

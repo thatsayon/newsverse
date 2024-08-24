@@ -1,4 +1,6 @@
+"use client";
 import Image from "next/image"
+import { MdKeyboardArrowLeft } from "react-icons/md";
 
 interface CreatorData {
     creator_profile_pic: string;
@@ -12,9 +14,10 @@ export default function BlockList() {
     ]
     return (
         <>
-            <div className="pt-3 border-l-2 border-slate-800">
-                <div className="border-b-2 border-slate-800">
-                    <h1 className="pl-4 pb-3 text-2xl font-semibold">Blocking</h1>
+            <div className="pt-3 lg:border-l-2 border-slate-800">
+                <div className="border-b-2 border-slate-800 flex pl-2">
+                    <MdKeyboardArrowLeft className='text-3xl lg:hidden mt-0.5 cursor-pointer' onClick={() => window.history.back()} />
+                    <h1 className="pl-2 pb-3 text-2xl font-semibold">Blocking</h1>
                 </div>
 
                 <div className="pl-4 mt-2">

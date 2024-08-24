@@ -106,16 +106,18 @@ function CheckMail() {
         <h1 className="uppercase text-2xl font-semibold mb-2">
           Please verify your email
         </h1>
-        <p className="w-2/4 m-auto text-lg text-center">
+        <p className="lg:w-2/4 w-5/6 m-auto text-lg text-center">
           We have sent you an email. Please click the link or button in the
           email to activate your account.
         </p>
       </div>
-      <div className="w-1/6 m-auto">
-        <div className="flex justify-center bg-main-one text-[#222] font-semibold rounded select-none px-2 py-1 text-xl">
-          <Link href="/login">Go to Login</Link>
+      <Link href="/login">
+        <div className="flex justify-center">
+          <div className="bg-main-one rounded-lg hover:bg-main-one-deep cursor-pointer text-black font-semibold p-2 text-lg">
+            <p className="uppercase">Go To Login</p>
+          </div>
         </div>
-      </div>
+      </Link>
     </>
   );
 }

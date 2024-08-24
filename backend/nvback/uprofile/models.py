@@ -33,6 +33,10 @@ class History(models.Model):
     def __str__(self):
         return f"{self.user.username} history created at {self.created_at}"
 
+    @staticmethod
+    def count_read_interaction(user):
+        return History.objects.filter(user=user, interaction_type="read").count()
+        
 class SearchHistory(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     searched_text = models.TextField()
@@ -128,5 +132,5 @@ class PinnedCreator(models.Model):
         verbose_name_plural = 'Pinned Creators'
 
     def __str__(self):
-        return f'{self.user.username} pinned {self.creator.user.username}'
+        return f'{self.user.username} pinned {self.pinned_creator.name}'
 

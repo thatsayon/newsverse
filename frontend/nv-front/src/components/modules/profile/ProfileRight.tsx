@@ -5,10 +5,11 @@ import dynamic from "next/dynamic"
 const About = dynamic(() => import('./RightSideComps/RAbout'), { ssr: false });
 const Upvotes = dynamic(() => import('./RightSideComps/RUpvotes'), { ssr: false });
 const Bookmark = dynamic(() => import('./RightSideComps/RBookmark'), { ssr: false });
+import { UserProfileData } from "@/types/userType";
 
-export default function PR() {
+export default function PR({userData}: {userData: UserProfileData}) {
     const [activeComponent, setActiveComponent] = useState<'about' | 'upvotes' | 'bookmark'>('about');
-
+    const name = "this is working"
     return (
         <>
             <div>
@@ -36,7 +37,7 @@ export default function PR() {
                 </div>
 
                 <div className="mt-4">
-                    {activeComponent === 'about' && <About />}
+                    {activeComponent === 'about' && <About userData={userData}/>}
                     {activeComponent === 'upvotes' && <Upvotes />}
                     {activeComponent === 'bookmark' && <Bookmark />}
                 </div>

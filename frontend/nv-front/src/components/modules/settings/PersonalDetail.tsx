@@ -5,6 +5,7 @@ import { MdAlternateEmail } from "react-icons/md";
 import { MdEmail } from "react-icons/md";
 import { FaCalendarAlt } from "react-icons/fa";
 import { FaTransgender } from "react-icons/fa";
+import { MdKeyboardArrowLeft } from "react-icons/md";
 
 export default function PD() {
     const [fullName, setFullName] = useState<string>('Ashiqul Islam Ayon');
@@ -20,13 +21,14 @@ export default function PD() {
     const handleGenderChange = (e: ChangeEvent<HTMLSelectElement>) => setGender(e.target.value);
     return (
         <>
-            <div className="pt-3 border-l-2 border-slate-800">
-                <div className="border-b-2 border-slate-800">
-                    <h1 className="pl-4 pb-3 text-2xl font-semibold">Personal Detail</h1>
+            <div className="pt-3 lg:border-l-2 lg:border-slate-800">
+                <div className="border-b-2 border-slate-800 flex pl-2">
+                    <MdKeyboardArrowLeft className='text-3xl lg:hidden mt-0.5 cursor-pointer' onClick={() => window.history.back()} />
+                    <h1 className="pb-3 text-2xl font-semibold pl-2">Personal Detail</h1>
                 </div>
 
                 <div className="flex flex-col pt-4 pl-4">
-                    <div className="flex items-center bg-zinc-700 rounded-md py-2 mr-80">
+                    <div className="flex items-center bg-zinc-700 rounded-md py-2 lg:mr-80 mr-4">
                         <IoPerson className="text-3xl text-gray-400 mx-3" />
 
                         <div>
@@ -46,7 +48,7 @@ export default function PD() {
                 </div>
 
                 <div className="flex flex-col pt-4 pl-4">
-                    <div className="flex items-center bg-zinc-700 rounded-md py-2 mr-80">
+                    <div className="flex items-center bg-zinc-700 rounded-md py-2 lg:mr-80 mr-4">
                         <MdAlternateEmail className="text-3xl text-gray-400 mx-3" />
 
                         <div>
@@ -66,7 +68,7 @@ export default function PD() {
                 </div>
 
                 <div className="flex flex-col pt-4 pl-4">
-                    <div className="flex items-center bg-zinc-700 rounded-md py-2 mr-80">
+                    <div className="flex items-center bg-zinc-700 rounded-md py-2 lg:mr-80 mr-4">
                         <MdEmail className="text-3xl text-gray-400 mx-3" />
 
                         <div>
@@ -86,7 +88,7 @@ export default function PD() {
                 </div>
 
                 <div className="flex flex-col pt-4 pl-4">
-                    <div className="flex items-center bg-zinc-700 rounded-md py-2 mr-80">
+                    <div className="flex items-center bg-zinc-700 rounded-md py-2 lg:mr-80 mr-4">
                         <FaCalendarAlt className="text-3xl text-gray-400 mx-3" />
                         <div className='relative w-full mr-4'>
                             <label htmlFor="birth_date" className="text-sm text-gray-400 mb-0.5">
@@ -105,7 +107,7 @@ export default function PD() {
                 </div>
 
                 <div className="flex flex-col pt-4 pl-4">
-                    <div className="flex items-center bg-zinc-700 rounded-md py-2 mr-80">
+                    <div className="flex items-center bg-zinc-700 rounded-md py-2 lg:mr-80 mr-4">
                         <FaTransgender className="text-3xl text-gray-400 mx-3" />
                         <div className='relative w-full mr-4'>
                             <label htmlFor="gender" className="text-sm text-gray-400 mb-0.5">
@@ -117,7 +119,7 @@ export default function PD() {
                                 value={gender}
                                 onChange={handleGenderChange}
                                 className="w-full bg-zinc-700 text-white text-xl border-none rounded-md py-1 focus:outline-none"
-                                style={{appearance: "none"}}
+                                style={{ appearance: "none" }}
                             >
                                 <option value="" disabled>Select Gender</option>
                                 <option value="male">Male</option>
@@ -128,7 +130,7 @@ export default function PD() {
                     </div>
                 </div>
 
-                <div className='text-right mr-80 mt-4'>
+                <div className='text-right lg:mr-80 mr-4 mt-4'>
                     <button className='bg-main-one text-black font-semibold p-2 rounded-lg text-xl hover:bg-main-one-deep'>Update</button>
                 </div>
             </div>

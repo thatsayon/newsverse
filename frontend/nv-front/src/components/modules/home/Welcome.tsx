@@ -1,5 +1,5 @@
 import { Bebas_Neue, Oswald, Lilita_One } from "next/font/google";
-import { BsFacebook, BsInstagram, BsYoutube, BsDiscord } from "react-icons/bs";
+import { BsFacebook, BsInstagram, BsDiscord, BsTwitterX, BsTelegram } from "react-icons/bs";
 import { useState, useEffect } from "react";
 import { MdKeyboardDoubleArrowUp } from "react-icons/md";
 import { Link, animateScroll as scroll } from "react-scroll"; // Import Link from react-scroll
@@ -62,9 +62,8 @@ export default function WelcomeHome() {
 
       <button
         onClick={() => scroll.scrollToTop({ duration: 500 })} // Smooth scroll to top in 500ms
-        className={`scroll-to-top-button ${
-          showScrollTopButton ? "visible" : "hidden"
-        }`}
+        className={`scroll-to-top-button ${showScrollTopButton ? "visible" : "hidden"
+          }`}
       >
         <MdKeyboardDoubleArrowUp />
       </button>
@@ -186,7 +185,7 @@ export default function WelcomeHome() {
             <div className="flex justify-center">
               <a href="/signup">
                 <p
-                  className="bg-white text-black px-2 text-xl font-bold py-1 dancing mx-8 rounded-lg"
+                  className="bg-white text-black px-2 text-xl font-bold py-1 dancing mx-8 rounded-lg text-center"
                   style={lilita.style}
                 >
                   Sign up now on News Verse for personalized, reliable news !!!
@@ -210,10 +209,18 @@ export default function WelcomeHome() {
         </div>
 
         <div className="flex text-2xl py-3 gap-x-4">
-          <BsFacebook className="cursor-pointer hover:text-main-one" />
-          <BsInstagram className="cursor-pointer hover:text-main-one" />
-          <BsYoutube className="cursor-pointer hover:text-main-one" />
-          <BsDiscord className="cursor-pointer hover:text-main-one" />
+          <a href="https://facebook.com/newsverseglobal/" target="_blank">
+            <BsFacebook className="cursor-pointer hover:text-main-one" />
+          </a>
+          <a href="https://instagram.com/newsverseglobal/" target="_blank">
+            <BsInstagram className="cursor-pointer hover:text-main-one" />
+          </a>
+          <a href="https://x.com/newsverseglobal/" target="_blank">
+            <BsTwitterX className="cursor-pointer hover:text-main-one" />
+          </a>
+          <a href="https://t.me/NewsVerseGlobal/" target="_blank">
+            <BsTelegram className="cursor-pointer hover:text-main-one" />
+          </a>
         </div>
 
         <div>

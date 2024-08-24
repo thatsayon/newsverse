@@ -138,7 +138,7 @@ section .signin .content .form .inputBox i {
 
 .signin .content .form .inputBox input:focus ~ i,
 .signin .content .form .inputBox input:valid ~ i {
-  transform: translateY(-7.5px);
+  transform: translateY(-12px);
   font-size: 0.8em;
   color: #fff;
 }
