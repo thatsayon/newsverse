@@ -92,24 +92,22 @@ class PredictedPost(APIView, PageNumberPagination):
             final_posts.extend(list(posts.filter(read_count=2)))
 
             if final_posts:
-                # Paginate the filtered posts
+                if len(final_posts) < 20:
+                    posts = Post.objects.filter(created_at__gte=timezone.now() - timezone.timedelta(days=7)).order_by('-upvote_count')[:40]
+                    final_posts = list(set(final_posts).union(posts))
+
                 result = self.paginate_queryset(final_posts, request, view=self)
                 serializer = PostSerializer(result, many=True, context={'request': request})
+                return self.get_paginated_response(serializer.data)
 
-                response = self.get_paginated_response(serializer.data)
-                response.status_code = status.HTTP_200_OK
-                return response
-            else:
-                seven_days_ago = timezone.now() - timezone.timedelta(days=7)
-                recent_posts = Post.objects.filter(created_at__gte=seven_days_ago)
-                posts = recent_posts.order_by('-upvote_count')
-                if posts.exists():
-                    result = self.paginate_queryset(posts, request, view=self)
-                    serializer = PostSerializer(result, many=True, context={'request': request})
-                    response = self.get_paginated_response(serializer.data)
-                    response.status_code = status.HTTP_200_OK
-                    return response
-                else:
-                    return Response({"error": "No posts found for this user"}, status=status.HTTP_404_NOT_FOUND)
+            posts = Post.objects.filter(created_at__gte=timezone.now() - timezone.timedelta(days=7)).order_by('-upvote_count')
+            
+            if posts.exists():
+                result = self.paginate_queryset(posts, request, view=self)
+                serializer = PostSerializer(result, many=True, context={'request': request})
+                return self.get_paginated_response(serializer.data)
+            
+            return Response({"error": "No posts found for this user"}, status=status.HTTP_404_NOT_FOUND)
+
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

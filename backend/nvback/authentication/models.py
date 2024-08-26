@@ -4,6 +4,7 @@ from django.contrib.postgres.fields import ArrayField
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 from django.db import models
+import uuid
 
 class CustomAccountManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -28,6 +29,7 @@ class CustomAccountManager(BaseUserManager):
 
 
 class UserAccount(AbstractBaseUser, PermissionsMixin):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
     email = models.EmailField(_("email address"), unique=True)
     username = models.CharField(_("username"), max_length=120, unique=True)
     full_name = models.CharField(_("full name"), max_length=255)

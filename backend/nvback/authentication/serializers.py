@@ -2,6 +2,7 @@ from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
 from predict.models import UserInfo
+from uprofile.models import Profile
 import re 
 
 User = get_user_model()
@@ -71,7 +72,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         }
         
         UserInfo.objects.create(**user_info_data)
-        
+        Profile.objects.create(user=user)
         return user
     
 class UserLoginSerializer(serializers.Serializer):

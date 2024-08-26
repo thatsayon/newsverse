@@ -9,7 +9,7 @@ from .post import add_post
 from .models import *
 
 class CrawlWwebsites(APIView):
-    # permission_classes = [IsAuthenticated, IsSelectedUser]
+    permission_classes = [IsAuthenticated, IsSelectedUser]
 
     def post(self, request):
         links = RssLink.objects.all()
@@ -49,10 +49,10 @@ class CrawlWwebsites(APIView):
                     except Exception:
                         pass
 
-        data1 = crawl_data("https://feeds.bbci.co.uk/news/world/rss.xml")
+        # data1 = crawl_data("https://feeds.bbci.co.uk/news/world/rss.xml")
         # data2 = crawl_data("https://www.jagonews24.com/rss/rss.xml")
         # data = data1 + data2
         # for d in data:
         #     add_post(d['title'], d['content'], d['thumbnail'])
 
-        return Response({"message": "crawling completed", "data": data1}, status=status.HTTP_200_OK)
+        return Response({"message": "crawling completed"}, status=status.HTTP_200_OK)
