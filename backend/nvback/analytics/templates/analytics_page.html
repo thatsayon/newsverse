@@ -1,0 +1,28 @@
+<!-- templates/admin/my_custom_admin_page.html -->
+
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/analytics_page.css' %}">
+
+<h1>Analytics</h1>
+<div>
+    <div>
+        <p>Total:</p>
+    </div>
+    
+    <div class="main_data_div">
+        <div class="data_div">
+            <p>Total Users</p>
+            <p>{{ total_user }}</p>
+        </div>
+        
+        <div class="data_div">
+            <p>Total Posts</p>
+            <p>{{ total_post }}</p>
+        </div>
+    </div>
+</div>
+<p>{{ data }}</p>
+{% endblock %}

@@ -1,0 +1,22 @@
+.data_div {
+    display: inline-block;
+    padding: .5rem 2rem;
+    border-radius: 10px;
+    border: 2px;
+    background-color: #212121;
+    text-align: center;
+    margin-right: .5rem;
+}
+
+.data_div > p:first-child{
+    font-size: large;
+    font-weight: bolder;
+    margin: 0;
+    margin-bottom: 10px;
+}
+
+.data_div > p:last-child{
+    margin: 0;
+    font-size: medium;
+    font-weight: bold;
+}
