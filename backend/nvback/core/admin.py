@@ -7,7 +7,7 @@ from django.contrib.auth import get_user_model
 from django.utils import timezone
 from datetime import timedelta
 from post.models import Post 
-from analytics.models import ActiveUserCount
+from analytics.models import ActiveUserCount, PostReport
 User = get_user_model()
 
 def chart_view():
@@ -36,7 +36,6 @@ class CustomAdminSite(AdminSite):
             'total_posts': Post.objects.count(),
             'comments': 450,
         }
-        print(chart_view())
         extra_context['activity'] = {
             'total_active_user_today': ActiveUserCount.objects.filter(date=timezone.now().date()).count(),
             'total_active_user_yesterday': ActiveUserCount.objects.filter(date=timezone.now().date() - timedelta(days=1)).count(),
@@ -50,7 +49,10 @@ class CustomAdminSite(AdminSite):
                 date__month=(timezone.now().date().replace(day=1) - timedelta(days=1)).month).count(),
             'graph_data': chart_view(),
         }
-        
+
+        extra_context['report'] = {
+            'post_report': PostReport.objects.count(),
+        }
         return super().index(request, extra_context=extra_context)
 
 admin_site = CustomAdminSite()

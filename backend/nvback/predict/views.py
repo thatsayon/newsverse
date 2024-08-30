@@ -6,10 +6,16 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from django.db.models import Q, Case, When, IntegerField, Exists, OuterRef, Subquery
 from django.utils import timezone
+from django.contrib.auth import get_user_model
+from collections import Counter
 from datetime import timedelta
 from post.models import Post
 from predict.models import UserInfo, UserReadRecord
+from analytics.models import PostReport
 from post.serializers import PostSerializer
+from .models import UserInfo
+
+User = get_user_model()
 
 class PredictedPost(APIView, PageNumberPagination):
     permission_classes = [IsAuthenticated]
@@ -111,3 +117,38 @@ class PredictedPost(APIView, PageNumberPagination):
 
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class ShowMoreAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def post(self, request, post_id):
+        post = Post.objects.filter(id=post_id).first()
+        if post:
+            user_info = UserInfo.objects.get(user=request.user)
+            user_info.fav_topic = dict(Counter(user_info.fav_topic) + Counter(post.topics))
+            user_info.save()
+            
+        return Response(status=status.HTTP_200_OK)
+    
+class ShowLessAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def post(self, request, post_id):
+        post = Post.objects.filter(id=post_id).first()
+        if post:
+            user_info = UserInfo.objects.get(user=request.user)
+            user_info.fav_topic = dict((Counter(user_info.fav_topic) - Counter(post.topics)).items())
+            user_info.save()
+        return Response(status=status.HTTP_200_OK)
+    
+class ReportPostAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def post(self, request, post_id):
+        post = Post.objects.filter(id=post_id).first()
+        if post:
+            try:
+                PostReport.objects.create(post=post, user=request.user)
+            except Exception as e:
+                return Response(status=status.HTTP_400_BAD_REQUEST) 
+        return Response(status=status.HTTP_200_OK)

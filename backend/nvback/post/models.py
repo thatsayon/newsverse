@@ -5,6 +5,7 @@ from django.contrib.postgres.fields import ArrayField
 from django.utils.text import slugify
 import random
 import string
+import uuid 
 
 User = get_user_model()
 
