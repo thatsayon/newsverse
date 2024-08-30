@@ -1,9 +1,10 @@
 from django.contrib import admin
 from .models import *
+from core.admin import admin_site
 
-admin.site.register(Bookmark)
-admin.site.register(History)
-admin.site.register(SearchHistory)
-admin.site.register(Customize)
-admin.site.register(Profile)
-admin.site.register(PinnedCreator)
+admin_site.register(Bookmark)
+admin_site.register(History)
+admin_site.register(SearchHistory)
+admin_site.register(Customize)
+admin_site.register(Profile)
+admin_site.register(PinnedCreator)

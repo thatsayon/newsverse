@@ -22,6 +22,7 @@ ALLOWED_HOSTS = [
 # Application definition
 
 INSTALLED_APPS = [
+     'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -41,7 +42,12 @@ INSTALLED_APPS = [
     'analytics'
 ]
 
-
+JAZZMIN_SETTINGS = {
+        "site_title": "News Verse",
+        "site_header": "News Verse",
+        "site_brand": "News Verse",
+        "show_ui_builder": True,
+}
 # need to check on the csrf token before production | *** (must)
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -53,6 +59,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
+    # custom middlewares
+    'core.middleware.TrackUserVisitMiddleware',
 ]
 
 CORS_ALLOWED_ORIGINS = [

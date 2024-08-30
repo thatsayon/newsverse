@@ -1,10 +1,10 @@
 from django.conf.urls.static import static
-from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
+from .admin import admin_site  # Import the instance, not the class
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('admin/', admin_site.urls),  # Use the instance, not the class
     path('auth/', include('authentication.urls')),
     path('post/', include('post.urls')),
     path('predict/', include('predict.urls')),
