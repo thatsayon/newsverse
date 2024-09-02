@@ -33,9 +33,7 @@ class PostReportAdmin(admin.ModelAdmin):
     report_count.short_description = 'Report Count'
 
     def post_link(self, obj):
-        # Generate the link to the Post admin page
         link = reverse("admin:%s_%s_change" % (obj.post._meta.app_label, obj.post._meta.model_name), args=[obj.post.id])
-        # Truncate the title to 2-3 words
         truncated_title = ' '.join(obj.post.title.split()[:3]) + '...'
         return format_html('<a href="{}">{}</a>', link, truncated_title)
 

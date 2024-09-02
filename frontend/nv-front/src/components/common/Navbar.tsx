@@ -37,6 +37,7 @@ import { AiOutlineFire } from "react-icons/ai";
 import { FaRegBookmark } from "react-icons/fa";
 import { RiHistoryFill } from "react-icons/ri";
 import useMediaQuery from '@mui/material/useMediaQuery';
+import styles from '@/utils/customFont.module.css';
 
 const darkTheme = createTheme({
   palette: {
@@ -337,8 +338,8 @@ export default function NavBar(token: any) {
             <>
               {/* Login button on desktop screens */}
               <a href={"/login"} className="font-semibold">
-                <div className="text-black bg-main-one px-4 py-1.5 rounded mx-2 text-xl">
-                  <p>Login</p>
+                <div className="text-black bg-main-one px-3 py-1 rounded mx-2 text-2xl hover:bg-main-one-deep">
+                  <p className={styles.lalitaOneFont}>Login</p>
                 </div>
               </a>
             </>

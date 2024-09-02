@@ -30,7 +30,14 @@ class ActiveUserCount(models.Model):
 class PostReport(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
-    
+    report_reason = models.CharField(max_length=50, choices=[
+        ("sfi", "Scam, fraud or impersonation"),
+        ("spam", "Spam"),
+        ("fi", "False information"),
+        ("spri", "Selling or promoting restricted items"),
+        ("dws", "I don't want to see this"),
+        ("se", "Something else")
+    ]) 
     class Meta:
         unique_together = ('user', 'post')
     

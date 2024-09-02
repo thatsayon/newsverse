@@ -1,20 +1,9 @@
-import { Bebas_Neue, Oswald, Lilita_One } from "next/font/google";
-import { BsFacebook, BsInstagram, BsDiscord, BsTwitterX, BsTelegram } from "react-icons/bs";
+import { BsFacebook, BsInstagram, BsTwitterX, BsTelegram } from "react-icons/bs";
 import { useState, useEffect } from "react";
 import { MdKeyboardDoubleArrowUp } from "react-icons/md";
 import { Link, animateScroll as scroll } from "react-scroll"; // Import Link from react-scroll
-import NavLink from "next/link";
 import "./HomeStyle.css";
-
-const oswald = Oswald({
-  weight: "400",
-  subsets: ["latin"],
-});
-
-const lilita = Lilita_One({
-  weight: "400",
-  subsets: ["latin"],
-});
+import styles from '@/utils/customFont.module.css';
 
 export default function WelcomeHome() {
   const [showScrollTopButton, setShowScrollTopButton] = useState(false);
@@ -36,8 +25,7 @@ export default function WelcomeHome() {
     <>
       <div className="flex relative h-[60vh] md:h-[75vh] lg:h-[75vh] sm:h-[60vh]">
         <h1
-          style={oswald.style}
-          className="md:text-8xl text-5xl md:px-14 px-6 flex-1 place-content-center"
+          className={`md:text-8xl text-5xl md:px-14 px-6 flex-1 place-content-center ${styles.oswaldFont}`}
         >
           Explore the latest updates <br />
           in the{" "}
@@ -52,8 +40,7 @@ export default function WelcomeHome() {
           .
         </h1>
         <h2
-          className="hidden md:inline-block absolute md:top-16 top-4 md:right-12 right-4 md:text-2xl text-xl text-center border-2 md:p-4 p-3 rounded-full"
-          style={oswald.style}
+          className={`hidden md:inline-block absolute md:top-16 top-4 md:right-12 right-4 md:text-2xl text-xl text-center border-2 md:p-4 p-3 rounded-full ${styles.oswaldFont}`}
         >
           All your news <br />
           in one place
@@ -75,7 +62,9 @@ export default function WelcomeHome() {
           duration={500} // Scrolling duration in milliseconds
           className="inline bg-red-500 px-6 py-4 rounded cursor-pointer"
         >
-          <p className="text-4xl font-bold text-black" style={lilita.style}>
+          <p className={`text-4xl font-bold text-black ${styles.lalitaOneFont}`}
+          // style={lilita.style}
+          >
             Hard Truth
           </p>
         </Link>
@@ -90,8 +79,7 @@ export default function WelcomeHome() {
           className="text-center inline-block cursor-pointer"
         >
           <p
-            className="bg-white text-black px-2 text-xl font-bold py-1 dancing rounded-lg"
-            style={lilita.style}
+            className={`bg-white text-black px-2 text-xl font-bold py-1 dancing rounded-lg ${styles.lalitaOneFont}`}
           >
             ?
           </p>
@@ -105,7 +93,7 @@ export default function WelcomeHome() {
           className="flex justify-center items-center h-full"
         >
           <div className="">
-            <p className="px-2 text-5xl md:text-6xl mb-8 text-center" style={oswald.style}>
+            <p className={`px-2 text-5xl md:text-6xl mb-8 text-center ${styles.oswaldFont}`}>
               Finding reliable <span className="text-main-one font-bold md:font-semibold">news</span> is
               like searching for a needle in a haystack of source.
             </p>
@@ -117,8 +105,7 @@ export default function WelcomeHome() {
                 className="text-center inline-block cursor-pointer"
               >
                 <p
-                  className="bg-white text-black px-2 text-xl font-bold py-1 dancing rounded-lg"
-                  style={lilita.style}
+                  className={`bg-white text-black px-2 text-xl font-bold py-1 dancing rounded-lg ${styles.lalitaOneFont}`}
                 >
                   Need a solution ?
                 </p>
@@ -136,12 +123,12 @@ export default function WelcomeHome() {
           className="flex flex-col justify-center items-center h-full"
         >
           <div className="inline mb-6 bg-green-500 px-6 py-4 rounded cursor-pointer">
-            <p className="text-4xl font-bold text-black" style={lilita.style}>
+            <p className={`text-4xl font-bold text-black ${styles.lalitaOneFont}`}>
               Solution
             </p>
           </div>
           <div className="">
-            <p className="text-6xl mb-8 text-center" style={oswald.style}>
+            <p className={`text-6xl mb-8 text-center ${styles.oswaldFont}`}>
               Finding Reliable News Just Got Easier with{" "}
               <span className="text-main-one md:font-semibold font-bold">News Verse</span>.
             </p>
@@ -153,8 +140,7 @@ export default function WelcomeHome() {
                 className="text-center inline-block cursor-pointer"
               >
                 <p
-                  className="bg-white text-black px-2 text-xl font-bold py-1 dancing rounded-lg"
-                  style={lilita.style}
+                  className={`bg-white text-black px-2 text-xl font-bold py-1 dancing rounded-lg ${styles.lalitaOneFont}`}
                 >
                   But how ?
                 </p>
@@ -172,12 +158,12 @@ export default function WelcomeHome() {
           className="flex flex-col justify-center items-center h-full"
         >
           <div className="inline mb-6 bg-main-one px-6 py-4 rounded cursor-pointer">
-            <p className="text-4xl font-bold text-black" style={lilita.style}>
+            <p className={`text-4xl font-bold text-black ${styles.lalitaOneFont}`}>
               Answer
             </p>
           </div>
           <div className="">
-            <p className="text-5xl mb-8 text-center" style={oswald.style}>
+            <p className={`text-5xl mb-8 text-center ${styles.oswaldFont}`}>
               With our advanced algorithm,{" "}
               <span className="text-main-one font-bold md:font-semibold">News Verse</span> finds the news
               you need from the entire web.
@@ -185,8 +171,7 @@ export default function WelcomeHome() {
             <div className="flex justify-center">
               <a href="/signup">
                 <p
-                  className="bg-white text-black px-2 text-xl font-bold py-1 dancing mx-8 rounded-lg text-center"
-                  style={lilita.style}
+                  className={`bg-white text-black px-2 text-xl font-bold py-1 dancing mx-8 rounded-lg text-center ${styles.lalitaOneFont}`}
                 >
                   Sign up now on News Verse for personalized, reliable news !!!
                 </p>
@@ -200,7 +185,7 @@ export default function WelcomeHome() {
       <div className="flex flex-col items-center mb-4">
         <div className="border-t-8 border-slate-600 w-[10rem] rounded-lg mb-8"></div>
         <div>
-          <p style={oswald.style} className="text-lg md:text-xl">
+          <p className={`text-lg md:text-xl ${styles.oswaldFont}`}>
             Contact us at{" "}
             <a href="mailto:contact@newsverse.com" className="text-blue-400">
               contact@newsverse.com
@@ -225,12 +210,12 @@ export default function WelcomeHome() {
 
         <div>
           <div className="mb-0.5">
-            <p className="text-center text-xl uppercase" style={lilita.style}>
+            <p className={`text-center text-xl uppercase ${styles.lalitaOneFont}`}>
               Helpful Links
             </p>
           </div>
           <div className="mb-1">
-            <ul className="flex text-xl" style={oswald.style}>
+            <ul className={`flex text-xl ${styles.oswaldFont}`}>
               <li className="mx-2 cursor-pointer">Contact</li>
               {" | "}
               <li className="mx-2 cursor-pointer">Privacy</li>
@@ -242,7 +227,7 @@ export default function WelcomeHome() {
           </div>
         </div>
 
-        <div className="text-sm" style={oswald.style}>
+        <div className={`text-sm ${styles.oswaldFont}`}>
           <p>Copyright © {new Date().getFullYear()} News Verse</p>
         </div>
       </div>

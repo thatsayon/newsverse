@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { FaShareSquare, FaBookmark, FaRegBookmark } from "react-icons/fa";
 import { LuArrowBigUp, LuArrowBigDown } from "react-icons/lu";
@@ -13,7 +14,7 @@ import { FaExternalLinkAlt } from "react-icons/fa";
 import { BiSolidHide } from "react-icons/bi";
 import { MdOutlineReport } from "react-icons/md";
 import NV from "@/../public/news verse.png";
-import { Toaster, toast } from "react-hot-toast";
+import toast, { Toaster } from 'react-hot-toast';
 import { Menu, MenuItem } from "@mui/material";
 import {
   EmailShareButton,
@@ -40,6 +41,8 @@ import {
   Poppins,
   Merienda,
 } from "next/font/google";
+import localFont from 'next/font/local'
+import { errorToast, successToast } from "@/utils/commonFunctions";
 
 const roboto = Roboto({
   weight: "400",
@@ -65,6 +68,7 @@ const oswald = Oswald({
   weight: "400",
   subsets: ["latin"],
 });
+
 export default function Card(post_data: any) {
   const [isFlipped, setIsFlipped] = useState<boolean>(false);
   const [blind, setBlind] = useState<number | null>(null);
@@ -76,6 +80,8 @@ export default function Card(post_data: any) {
   const [bookmarked, setBookmarked] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [shareModelOpen, setShareModelOpen] = useState<boolean>(false);
+
+  const router = useRouter();
 
   useEffect(() => {
     setupVoteVal(post_data.post_data.upvote_count);
@@ -96,7 +102,7 @@ export default function Card(post_data: any) {
 
     try {
       const response = await fetch(
-        `http://127.0.0.1:8000/post/upvote/${post_data.post_data.id}/`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/post/upvote/${post_data.post_data.id}/`,
         {
           method: "POST",
           headers: {
@@ -185,10 +191,32 @@ export default function Card(post_data: any) {
       const data = await response.json();
 
       if (data.bookmarked) {
-        toast("Post was added to your bookmark");
+        toast.success("Post added to bookmark", {
+          style: {
+            border: '1px solid #d7f64e',
+            padding: '16px',
+            color: '#d7f64e',
+            backgroundColor: '#222222',
+          },
+          iconTheme: {
+            primary: '#d7f64e',
+            secondary: '#222222',
+          },
+        });
         setBookmarked(true);
       } else {
-        toast("Post was removed from your bookmark");
+        toast.success("Post removed from bookmark", {
+          style: {
+            border: '1px solid #d7f64e',
+            padding: '16px',
+            color: '#d7f64e',
+            backgroundColor: '#222222',
+          },
+          iconTheme: {
+            primary: '#d7f64e',
+            secondary: '#222222',
+          },
+        });
         setBookmarked(false);
       }
     } catch (error) {
@@ -214,6 +242,64 @@ export default function Card(post_data: any) {
     setShareModelOpen(false);
   };
 
+  const handleShowMore = async () => {
+    const userToken = Cookies.get("token");
+    if (!userToken) {
+      errorToast("You're not logged in");
+      router.push("/login");
+    }
+
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/predict/show-more/${post_data.post_data.id}/`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Token ${userToken}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        errorToast("Something went wrong.");
+      } else {
+        successToast("Got it. We'll show more posts like this.");
+      }
+    } catch (error) {
+      errorToast("Something went wrong.");
+    }
+    handleCloseMenu();
+  }
+
+  const handleShowLess = async () => {
+    const userToken = Cookies.get("token");
+
+    if (!userToken) {
+      errorToast("You're not logged in");
+      router.push("/login");
+    }
+
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/predict/show-less/${post_data.post_data.id}/`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Token ${userToken}`
+          },
+        }
+      );
+
+      if (!response.ok) {
+        errorToast("Something went wrong.");
+      } else {
+        successToast("Got it. We'll show less posts like this.");
+      }
+    } catch (error) {
+      errorToast("Something went wrong.");
+    }
+    handleCloseMenu();
+  }
   const formatCardDate = (dateString: string): string => {
     const inputDate = new Date(dateString);
     const today = new Date();
@@ -245,6 +331,8 @@ export default function Card(post_data: any) {
 
   return (
     <>
+      <Toaster position="bottom-right"
+        reverseOrder={false} />
       <div
         key={data.id}
         ref={cardRef}
@@ -313,7 +401,7 @@ export default function Card(post_data: any) {
               }}
             >
               <MenuItem
-                onClick={handleCloseMenu}
+                onClick={handleShowMore}
                 sx={{ ":hover": { backgroundColor: "#444" } }}
               >
                 <div className="flex items-center">
@@ -322,7 +410,7 @@ export default function Card(post_data: any) {
                 </div>
               </MenuItem>
               <MenuItem
-                onClick={handleCloseMenu}
+                onClick={handleShowLess}
                 sx={{ ":hover": { backgroundColor: "#444" } }}
               >
                 <div className="flex items-center">
@@ -461,7 +549,7 @@ export default function Card(post_data: any) {
                           overflow: "hidden",
                           textOverflow: "ellipsis",
                           maxHeight: "3em",
-                          lineHeight: "1.5em", 
+                          lineHeight: "1.5em",
                           wordBreak: "break-word",
                         }}
                       >
@@ -517,7 +605,7 @@ export default function Card(post_data: any) {
                 <p
                   key={index}
                   className="px-2 py-1 bg-nav-dark rounded-md overflow-hidden text-ellipsis whitespace-nowrap"
-                  style={{ maxWidth: "80px", ...roboto.style }} 
+                  style={{ maxWidth: "80px", ...roboto.style }}
                 >
                   {topic}
                 </p>
@@ -541,9 +629,8 @@ export default function Card(post_data: any) {
         )}
         <div className="flex items-center mt-auto mb-[2px]">
           <div
-            className={`flex items-center justify-center mr-2 gap-1 cursor-pointer px-2 py-1 bg-nav-dark rounded-lg ${
-              userUpvoted ? "text-green-400" : ""
-            } hover:text-green-400`}
+            className={`flex items-center justify-center mr-2 gap-1 cursor-pointer px-2 py-1 bg-nav-dark rounded-lg ${userUpvoted ? "text-green-400" : ""
+              } hover:text-green-400`}
             onClick={handleUpvote}
           >
             <LuArrowBigUp className="text-2xl" />
@@ -552,9 +639,8 @@ export default function Card(post_data: any) {
             </p>
           </div>
           <div
-            className={`flex mr-2 cursor-pointer px-2 py-1 bg-nav-dark rounded-lg justify-center items-center ${
-              userDownvoted ? "text-red-400" : ""
-            } hover:text-red-400`}
+            className={`flex mr-2 cursor-pointer px-2 py-1 bg-nav-dark rounded-lg justify-center items-center ${userDownvoted ? "text-red-400" : ""
+              } hover:text-red-400`}
             onClick={handleDownvote}
           >
             <LuArrowBigDown className="mr-1 text-2xl" />
@@ -581,7 +667,6 @@ export default function Card(post_data: any) {
             ) : (
               <FaRegBookmark className="text-xl" />
             )}
-            <Toaster />
           </div>
           <div className="flex cursor-pointer px-2 py-1.5 bg-nav-dark items-center justify-center rounded-lg hover:text-main-one">
             <IoIosLink className="text-xl" />

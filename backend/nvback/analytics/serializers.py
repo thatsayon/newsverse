@@ -17,3 +17,8 @@ class SendMessageSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("You can only send one message every 3 hours.")
         
         return data
+    
+class PostReportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PostReport
+        fields = ['user', 'post', 'report_reason']

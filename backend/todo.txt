@@ -1,0 +1,1 @@
+also add negative values in the UserInfo.fav_topic that is for to make sure user don't see show less marked post

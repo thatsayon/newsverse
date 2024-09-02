@@ -141,14 +141,3 @@ class ShowLessAPIView(APIView):
             user_info.save()
         return Response(status=status.HTTP_200_OK)
     
-class ReportPostAPIView(APIView):
-    permission_classes = [IsAuthenticated]
-    
-    def post(self, request, post_id):
-        post = Post.objects.filter(id=post_id).first()
-        if post:
-            try:
-                PostReport.objects.create(post=post, user=request.user)
-            except Exception as e:
-                return Response(status=status.HTTP_400_BAD_REQUEST) 
-        return Response(status=status.HTTP_200_OK)
