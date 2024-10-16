@@ -12,4 +12,5 @@ urlpatterns = [
     path('check-email/', CheckEmailExistsorNotApiView.as_view(), name='check email'),
     path('check-username/', CheckUsernameExistsorNotAPIView.as_view(), name='check username'),
     path('get-username/', UsernameGetAPIView.as_view(), name='get-username'),
+    path('personal-detail/', PersonalDetailAPIView.as_view(), name='personal-detail'),
 ]

@@ -128,3 +128,8 @@ class UserInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = User 
         fields = ['email', 'username', 'full_name', 'date_of_birth', 'gender']
+
+class PersonalDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User 
+        fields = ['id', 'full_name', 'username', 'email', 'date_of_birth', 'gender']

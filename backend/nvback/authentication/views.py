@@ -132,7 +132,7 @@ class UserLoginAPIView(APIView):
                 email = EmailMultiAlternatives(
                     email_subject, '', to=[user.email])
                 email.attach_alternative(email_body, "text/html")
-                email.send()
+                # email.send()
 
                 user_info = UserInfoSerializer(user).data
                 return Response({'token': token.key, 'expires_in': expires_in(token), 'user_info': user_info})
@@ -243,3 +243,14 @@ class UsernameGetAPIView(APIView):
 
     def get(self, request, *args, **kwargs):
         return Response({"username": request.user.username})
+    
+class PersonalDetailAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        try:
+            user = request.user
+            serializer = PersonalDetailSerializer(user)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except User.DoesNotExist:
+            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)

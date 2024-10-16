@@ -1,9 +1,12 @@
 from pathlib import Path
 import os
 import dj_database_url
+import environ
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+env = environ.Env()
+environ.Env.read_env()
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -193,10 +196,10 @@ REST_FRAMEWORK = {
 
 # email configuration
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'mail.techview71.com'
-EMAIL_HOST_USER = 'no-reply@techview71.com'
+EMAIL_HOST = env('EMAIL_HOST')
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-EMAIL_HOST_PASSWORD = '1fjw0676Ayon'
-EMAIL_PORT = 465
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+EMAIL_PORT = env('EMAIL_HOST_PORT')
 EMAIL_USE_SSL = True
 EMAIL_USE_TLS = False

@@ -162,7 +162,7 @@ class CustomizeAPIView(APIView):
 #             return User.objects.get(username=username)
 #         except User.DoesNotExist:
 #             raise NotFound(f"Profile with username '{username}' not found")
-
+    
 class ProfileAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
